@@ -1,9 +1,11 @@
 /* Algebra Quest service worker: keeps a copy of the site on the device so it works offline.
    Pages are network-first; fonts and icons are cache-first. Only this site's own files are handled. */
-const CACHE = 'algebra-quest-v1';
-const FONTS = ['inter-latin-400', 'inter-latin-500', 'inter-latin-600', 'inter-latin-700', 'inter-latin-800',
-  'jetbrains-mono-latin-400', 'jetbrains-mono-latin-600', 'jetbrains-mono-latin-700'].map(f => `fonts/${f}-normal.woff2`);
-const CORE = ['./', 'index.html', 'css/style.css', 'js/engine.js', 'js/graph.js', 'js/gens1.js', 'js/gens2.js', 'js/content.js', 'js/widgets.js', 'js/app.js',
+const CACHE = 'algebra-quest-v2';
+const FONTS = ['fraunces-latin-600-normal', 'fraunces-latin-800-normal', 'fraunces-latin-600-italic',
+  'aq-legible-latin-400-normal', 'aq-legible-latin-400-italic', 'aq-legible-latin-600-normal',
+  'aq-legible-latin-700-normal', 'aq-legible-latin-800-normal',
+  'aq-legible-mono-latin-400-normal', 'aq-legible-mono-latin-700-normal'].map(f => `fonts/${f}.woff2`);
+const CORE = ['./', 'index.html', 'css/style.css', 'js/engine.js', 'js/graph.js', 'js/gens1.js', 'js/gens2.js', 'js/content.js', 'js/cards.js', 'js/widgets.js', 'js/app.js',
   'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png', ...FONTS];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => {
