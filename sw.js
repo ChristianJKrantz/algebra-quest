@@ -1,6 +1,6 @@
 /* Algebra Quest service worker: keeps a copy of the site on the device so it works offline.
    Pages are network-first; fonts and icons are cache-first. Only this site's own files are handled. */
-const CACHE = 'algebra-quest-v3';
+const CACHE = 'algebra-quest-v4';
 const FONTS = ['fraunces-latin-600-normal', 'fraunces-latin-800-normal', 'fraunces-latin-600-italic',
   'aq-legible-latin-400-normal', 'aq-legible-latin-400-italic', 'aq-legible-latin-600-normal',
   'aq-legible-latin-700-normal', 'aq-legible-latin-800-normal',
