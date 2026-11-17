@@ -105,7 +105,7 @@ let current = { page: 'home' };
 const openCh = new Set();
 let deferredInstall = null;
 function brand() {
-  return el('a', { class: 'brand', href: '#/' }, el('img', { src: 'icon.svg', alt: '', width: 38, height: 38 }),
+  return el('a', { class: 'brand', href: '#/' }, el('img', { src: 'icon.svg?v=2', alt: '', width: 38, height: 38 }),
     el('div', null, el('div', { class: 'bt', html: 'Algebra <i>Quest</i>' }), el('small', { text: 'Study notebook' })));
 }
 function mdots(tid) {

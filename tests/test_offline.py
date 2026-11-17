@@ -11,10 +11,10 @@ def ok(c, msg):
     print(('  ✓ ' if c else '  ✗ ') + msg)
     if not c: fails.append(msg)
 man = json.load(open(os.path.join(ROOT, 'manifest.webmanifest')))
-ok(man['display'] == 'standalone' and man['start_url'] == './' and all(os.path.exists(os.path.join(ROOT, i['src'])) for i in man['icons']), 'app manifest is valid and every icon exists')
+ok(man['display'] == 'standalone' and man['start_url'] == './' and all(os.path.exists(os.path.join(ROOT, i['src'].split('?')[0])) for i in man['icons']) and man['icons'][0]['sizes'] == '180x180' and all(i['type'] == 'image/png' for i in man['icons']), 'app manifest is valid, lists PNG icons only (180px iPhone icon first) and every icon exists')
 ok(any(i.get('purpose') == 'maskable' for i in man['icons']) and os.path.exists(os.path.join(ROOT, 'apple-touch-icon.png')), 'maskable Android icon and iPhone home-screen icon are included')
 sw = open(os.path.join(ROOT, 'sw.js')).read()
-missing = [f for f in __import__('re').findall(r"'((?:js|css|fonts)/[^']+|[\w.-]+\.(?:html|png|svg|webmanifest))'", sw) if not os.path.exists(os.path.join(ROOT, f))]
+missing = [f for f in __import__('re').findall(r"'((?:js|css|fonts)/[^'?]+|[\w.-]+\.(?:html|png|svg|webmanifest))(?:\?v=\d+)?'", sw) if not os.path.exists(os.path.join(ROOT, f))]
 fonts = [f for f in os.listdir(os.path.join(ROOT, 'fonts')) if f.endswith('.woff2')]
 ok(not missing and all(f[:-6] in sw for f in fonts), f'the service worker saves every page file and font {missing}')
 with sync_playwright() as pw:
