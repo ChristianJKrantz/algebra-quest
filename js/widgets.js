@@ -6,6 +6,10 @@ const W = AQ.widgets = AQ.widgets || {};
 const { rnd, pick, plot, H } = AQ;
 const esc = AQ.escHtml;
 const f1 = n => (Math.round(n * 100) / 100).toString();
+// tidy equation pieces: 1x → x, −1x → −x, + 0 dropped, (x − 0) → x
+const coef = (a, v) => a === 1 ? v : a === -1 ? '-' + v : f1(a) + v;
+const tail = k => k === 0 ? '' : k < 0 ? ' - ' + f1(-k) : ' + ' + f1(k);
+const shifted = (v, h) => h === 0 ? v : '(' + v + (h < 0 ? ' + ' + f1(-h) : ' - ' + f1(h)) + ')';
 
 function shell(host, withBtn) {
   host.innerHTML = '<div class="wbody"><div class="wplot" aria-live="polite"></div><div class="wctl"><div class="wsl"></div><div class="wout"></div>' + (withBtn ? '<div class="wbtn"></div>' : '') + '</div></div>';
@@ -62,7 +66,7 @@ W.lineMatch = function (host) {
   const draw = v => {
     const ok = Math.abs(v.m - tgt.m) < 1e-9 && v.b === tgt.b;
     s.plot.innerHTML = plot({ xmin: -9, xmax: 9, ymin: -9, ymax: 9, step: 1, lab: 3, label: 'target line and your line', curves: [{ f: x => tgt.m * x + tgt.b, cls: 'c-t dashed' }, { f: x => v.m * x + v.b, cls: 'c-a' }], points: [{ x: tgt.x1, y: tgt.m * tgt.x1 + tgt.b, label: '(' + tgt.x1 + ', ' + (tgt.m * tgt.x1 + tgt.b) + ')', cls: 'c-t' }, { x: tgt.x2, y: tgt.m * tgt.x2 + tgt.b, label: '(' + tgt.x2 + ', ' + (tgt.m * tgt.x2 + tgt.b) + ')', cls: 'c-t' }] });
-    s.out.innerHTML = H('Your line: ~y = ' + f1(v.m) + 'x ' + (v.b < 0 ? '- ' + (-v.b) : '+ ' + v.b) + '~') + (ok ? ' <b class="win">🎉 Matched the target!</b>' : '');
+    s.out.innerHTML = H('Your line: ~y = ' + (v.m === 0 ? f1(v.b) : coef(v.m, 'x') + tail(v.b)) + '~')+ (ok ? ' <b class="win">🎉 Matched the target!</b>' : '');
   };
   const vals = sliders(s.sl, [{ k: 'm', label: 'slope m', min: -4, max: 4, step: 0.5, val: 1 }, { k: 'b', label: 'y-intercept b', min: -7, max: 7, step: 1, val: 0 }], draw);
   roll(); draw(vals); addButton(s.btn, 'New target', () => { roll(); draw(vals); });
@@ -76,7 +80,7 @@ W.circleMatch = function (host) {
   const draw = v => {
     const ok = v.h === tgt.h && v.k === tgt.k && v.r === tgt.r;
     s.plot.innerHTML = plot({ xmin: -10, xmax: 10, ymin: -10, ymax: 10, step: 1, lab: 2, label: 'target circle and your circle', curves: [{ pts: circ(tgt.h, tgt.k, tgt.r), cls: 'c-t dashed' }, { pts: circ(v.h, v.k, v.r), cls: 'c-a' }], points: [{ x: tgt.h - tgt.r, y: tgt.k, label: '(' + (tgt.h - tgt.r) + ', ' + tgt.k + ')', cls: 'c-t', dx: -50 }, { x: tgt.h + tgt.r, y: tgt.k, label: '(' + (tgt.h + tgt.r) + ', ' + tgt.k + ')', cls: 'c-t' }] });
-    s.out.innerHTML = H('Your circle: ~(x ' + (v.h < 0 ? '+ ' + (-v.h) : v.h === 0 ? '' : '- ' + v.h) + ')^2 + (y ' + (v.k < 0 ? '+ ' + (-v.k) : v.k === 0 ? '' : '- ' + v.k) + ')^2 = ' + v.r * v.r + '~').replace('(x )', 'x') + (ok ? ' <b class="win">🎉 Matched!</b>' : '');
+    s.out.innerHTML = H('Your circle: ~' + shifted('x', v.h) + '^2 + ' + shifted('y', v.k) + '^2 = ' + f1(v.r * v.r) + '~') + (ok ? ' <b class="win">🎉 Matched!</b>' : '');
   };
   const vals = sliders(s.sl, [{ k: 'h', label: 'center x (h)', min: -6, max: 6, step: 1, val: 0 }, { k: 'k', label: 'center y (k)', min: -6, max: 6, step: 1, val: 0 }, { k: 'r', label: 'radius r', min: 1, max: 7, step: 1, val: 3 }], draw);
   roll(); draw(vals); addButton(s.btn, 'New target', () => { roll(); draw(vals); });
@@ -89,7 +93,7 @@ W.parabolaMatch = function (host) {
   const draw = v => {
     const ok = Math.abs(v.a - tgt.a) < 1e-9 && v.h === tgt.h && v.k === tgt.k;
     s.plot.innerHTML = plot({ xmin: -10, xmax: 10, ymin: -10, ymax: 10, step: 1, lab: 2, label: 'target parabola and your parabola', curves: [{ f: x => tgt.a * (x - tgt.h) ** 2 + tgt.k, cls: 'c-t dashed' }, { f: x => v.a * (x - v.h) ** 2 + v.k, cls: 'c-a' }], points: [{ x: tgt.h, y: tgt.k, label: 'vertex (' + tgt.h + ', ' + tgt.k + ')', cls: 'c-t' }, { x: tgt.h + 2, y: tgt.a * 4 + tgt.k, label: '(' + (tgt.h + 2) + ', ' + f1(tgt.a * 4 + tgt.k) + ')', cls: 'c-t', dx: 8, dy: 14 }] });
-    s.out.innerHTML = H('Your parabola: ~y = ' + f1(v.a) + '(x ' + (v.h < 0 ? '+ ' + (-v.h) : v.h === 0 ? '' : '- ' + v.h) + ')^2 ' + (v.k < 0 ? '- ' + (-v.k) : '+ ' + v.k) + '~').replace('(x )', 'x') + (ok ? ' <b class="win">🎉 Matched!</b>' : '');
+    s.out.innerHTML = H('Your parabola: ~y = ' + coef(v.a, shifted('x', v.h) + '^2') + tail(v.k) + '~') + (ok ? ' <b class="win">🎉 Matched!</b>' : '');
   };
   const vals = sliders(s.sl, [{ k: 'a', label: 'stretch a', min: -3, max: 3, step: 0.5, val: 1 }, { k: 'h', label: 'vertex x (h)', min: -6, max: 6, step: 1, val: 0 }, { k: 'k', label: 'vertex y (k)', min: -6, max: 6, step: 1, val: 0 }], draw);
   roll(); draw(vals); addButton(s.btn, 'New target', () => { roll(); draw(vals); });

@@ -24,6 +24,7 @@ G['parabola-features'] = function () {
       h = rnd(-5, 5); k = (a > 0 ? 1 : -1) * rnd(1, 6); b = -2 * a * h; c = a * h * h + k; xints = [];
     }
     if (Math.abs(b) > 30) continue;
+    if (Math.abs(a) === 1 && b === -2 && c === -3) continue;   // the practice test's own parabola
     return {
       prompt: `For ~f(x) = ${poly([a, b, c])}~, answer each part.`,
       fields: [
@@ -261,7 +262,7 @@ G['inverse-fn'] = function () {
     if (v === 2) { const k = nz(-9, 9);
       return { prompt: `Find the inverse of ~f(x) = x^3 ${sgn(k)}~. (Cube root is typed cbrt( ).)`, fields: one('f⁻¹(x) =', AQ.exprCheck(x => Math.cbrt(x - k)), '~f^(-1)(x) = cbrt(x ' + sgn(-k) + ')~', 'like cbrt(x - 2)'),
         hints: ['Replace f(x) with y and swap x and y.', 'Undo the + constant first, then undo the cube with a cube root.'], solution: [`Swap: ~x = y^3 ${sgn(k)}~`, `~y^3 = x ${sgn(-k)}~`, `~y = cbrt(x ${sgn(-k)})~`] }; }
-    const a = nz(-6, 6), b = nz(-6, 6);
+    const a = nz(-6, 6), b = nz(-6, 6); if (a === 4 && b === -2) continue;   // too close to the practice test's function
     return { prompt: `Find the inverse of ~f(x) = {${a}|x} ${sgn(b)}~.`, fields: one('f⁻¹(x) =', AQ.exprCheck(x => a / (x - b)), '~f^(-1)(x) = {' + a + '|x ' + sgn(-b) + '}~', 'like 3/(x - 1)'),
       hints: ['Replace f(x) with y and swap x and y.', 'Subtract the constant first, so the fraction stands alone.', 'Then solve for y. It’s in a denominator, so multiply it out.'], solution: [`Swap: ~x = {${a}|y} ${sgn(b)}~`, `~x ${sgn(-b)} = {${a}|y}~`, `~y = {${a}|x ${sgn(-b)}}~`] };
   }

@@ -1,7 +1,10 @@
-"""Browser test: python3 tests/test_ui.py  (needs `python3 -m http.server 8765` in the repo root and Playwright)."""
-import re, sys
+"""Browser test of every page, lab, flashcard deck and practice flow, on desktop and phone sizes, in both themes.
+   Run: python3 tests/test_ui.py  (needs Playwright)."""
+import re, sys, os
+sys.path.insert(0, os.path.dirname(__file__))
+from serve import serve
 from playwright.sync_api import sync_playwright
-BASE = 'http://localhost:8765/index.html'
+BASE = serve()[0] + 'index.html'
 errs = []
 def chk(cond, msg):
     if not cond: errs.append(msg)

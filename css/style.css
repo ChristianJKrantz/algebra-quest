@@ -230,6 +230,7 @@ table.map tr:last-child td{border-bottom:0}
 .step.done .sn{background:var(--good);border-color:var(--good);color:#fff}
 .step.on.done .sn{background:transparent;border-color:currentColor;color:inherit}
 .sarrow{align-self:center;color:var(--line2);padding:0 2px}
+@media (max-width:560px){.steps{width:100%}.step{flex:1;justify-content:center;padding:9px 6px;gap:6px;font-size:14.5px}.step .sx,.sarrow,.step.stars-step{display:none}}
 
 .lesson{max-width:740px}
 .ltools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:-4px 0 22px;padding:10px 14px;background:var(--sunk);border:1px dashed var(--line2);border-radius:12px;font-size:14.5px;color:var(--ink2)}
@@ -389,6 +390,8 @@ table.synth tr.rule td.kcell{border-top:0}
 .rate.r1{border-color:color-mix(in srgb,var(--bad) 60%,transparent);color:var(--bad)}.rate.r1:hover{background:var(--bad-soft)}
 .rate.r2{border-color:color-mix(in srgb,var(--gold) 70%,transparent);color:color-mix(in srgb,var(--gold) 80%,var(--ink))}.rate.r2:hover{background:var(--hl-soft)}
 .rate.r3{border-color:color-mix(in srgb,var(--good) 60%,transparent);color:var(--good)}.rate.r3:hover{background:var(--good-soft)}
+.fcact:has(.rate){flex-wrap:nowrap}
+@media (max-width:560px){.fc-in{min-height:236px}.fc-face{padding:50px 20px 20px}.rate{min-width:0;padding:10px 4px;font-size:15px}.rate small{font-size:11.5px}.fchelp{display:none}}
 .fchelp{text-align:center;font-size:13.5px;color:var(--muted);margin-top:12px}
 .boxes{display:flex;gap:8px;align-items:flex-end;height:96px;margin:16px 0 6px;max-width:460px}
 .boxes div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;font-size:12px;color:var(--muted);height:100%}

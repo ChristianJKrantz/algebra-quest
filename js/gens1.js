@@ -81,7 +81,7 @@ G['rect-area'] = function () {
   const unit = pick(['meters', 'feet', 'centimeters', 'kilometers']);
   if (Math.random() < 0.5) {
     const m = pick([3, 4]), L = rnd(3, 9), k = rnd(2, m * L - 2), W = m * L - k, A = L * W;
-    if (A === 216) return G['rect-area']();
+    if (A === 216 || (L === 12 && W === 18) || (L === 18 && W === 12)) return G['rect-area']();   // the practice test's own rectangle
     return {
       prompt: `The width of a rectangle is ${k} ${unit} less than ${m === 3 ? 'three times' : 'four times'} its length. Its area is ${A} square ${unit}. Find the dimensions.`,
       fields: [{ key: 'L', label: 'length', check: AQ.numCheck(L), answer: '~' + L + '~', ph: 'number' }, { key: 'W', label: 'width', check: AQ.numCheck(W), answer: '~' + W + '~', ph: 'number' }],
@@ -90,6 +90,7 @@ G['rect-area'] = function () {
     };
   }
   const W = rnd(3, 14), k = rnd(2, 9), L = W + k, A = W * L;
+  if (A === 216 || (L === 18 && W === 12)) return G['rect-area']();   // the practice test's own rectangle
   return {
     prompt: `The length of a rectangle is ${k} ${unit} more than its width. The area is ${A} square ${unit}. Find the length and the width.`,
     fields: [{ key: 'L', label: 'length', check: AQ.numCheck(L), answer: '~' + L + '~', ph: 'number' }, { key: 'W', label: 'width', check: AQ.numCheck(W), answer: '~' + W + '~', ph: 'number' }],
@@ -324,6 +325,7 @@ G['abs-eq'] = function () {
 G['abs-ineq'] = function () {
   for (;;) {
     const p = rnd(2, 5), q = nz(-8, 8), c = rnd(2, 12), op = pick(['<', '<=', '>', '>=']), strict = op.length === 1;
+    if (p === 3 && q === -2 && c === 7) continue;   // the practice test's own absolute value expression
     const a = Fr(-c - q, p), b = Fr(c - q, p); if (a.d > 5 || b.d > 5) continue;
     const iv = op[0] === '<' ? [{ lo: fval(a), hi: fval(b), loC: !strict, hiC: !strict }] : [{ lo: -Infinity, hi: fval(a), loC: false, hiC: !strict }, { lo: fval(b), hi: Infinity, loC: !strict, hiC: false }];
     const show = op[0] === '<' ? (strict ? '(' : '[') + fa(a) + ', ' + fa(b) + (strict ? ')' : ']') : '(-inf, ' + fa(a) + (strict ? ')' : ']') + ' U ' + (strict ? '(' : '[') + fa(b) + ', inf)';
@@ -338,10 +340,12 @@ G['abs-ineq'] = function () {
 
 /* ============ CHAPTER 2 ============ */
 const pt = (x, y) => '(' + x + ', ' + y + ')';
+// the practice test's two point pairs (either order) never appear in the distance or midpoint generators
+const testPts = (a, b, c, d) => [[-5, -4, 3, -6], [-7, 4, -2, 2]].some(([p, q, r, s]) => (a === p && b === q && c === r && d === s) || (a === r && b === s && c === p && d === q));
 G['distance'] = function () {
   for (;;) {
     const x1 = rnd(-9, 9), y1 = rnd(-9, 9), x2 = rnd(-9, 9), y2 = rnd(-9, 9);
-    const dx = x2 - x1, dy = y2 - y1; if (dx === 0 && dy === 0) continue; if (x1 === -5 && y1 === -4 && x2 === 3 && y2 === -6) continue;
+    const dx = x2 - x1, dy = y2 - y1; if (dx === 0 && dy === 0) continue; if (testPts(x1, y1, x2, y2)) continue;
     const n = dx * dx + dy * dy, d = Math.sqrt(n);
     return {
       prompt: `Find the distance between ~P${pt(x1, y1)}~ and ~Q${pt(x2, y2)}~. Exact (like 2sqrt(17)) or decimal to 2 places both work.`,
@@ -354,7 +358,7 @@ G['distance'] = function () {
 G['midpoint'] = function () {
   for (;;) {
     const x1 = rnd(-9, 9), y1 = rnd(-9, 9), x2 = rnd(-9, 9), y2 = rnd(-9, 9);
-    if (x1 === -7 && y1 === 4 && x2 === -2 && y2 === 2) continue;
+    if (testPts(x1, y1, x2, y2)) continue;
     const mx = Fr(x1 + x2, 2), my = Fr(y1 + y2, 2);
     return {
       prompt: `Find the midpoint of ~P${pt(x1, y1)}~ and ~Q${pt(x2, y2)}~.`,
@@ -549,11 +553,13 @@ function fnPair() {
   const f = [nz(-5, 5), nz(-9, 9)], g = pick([[nz(-5, 5), nz(-9, 9)], [nz(1, 4), nz(-6, 6), nz(-5, 5)]]);
   return { f, g };
 }
+// the practice test's linear f and g pairs never appear in the function-operation generators
+const testFG = (a, b, c, d) => (a === -4 && b === 9 && c === 5 && d === 3) || (a === 3 && b === -6 && c === 9 && d === -5);
 G['fn-arith'] = function () {
   const v = rnd(0, 3);
   for (;;) {
     const f = [nz(-5, 5), nz(-9, 9)], gq = [nz(1, 4), nz(-6, 6), nz(-7, 7)], gl = [nz(-6, 6), nz(-9, 9)];
-    const k = nz(-4, 4);
+    const k = nz(-4, 4); if (testFG(f[0], f[1], gl[0], gl[1])) continue;
     if (v === 0) { const op = pick(['+', '-']), s = op === '+' ? 1 : -1, r = [f[0] + s * gl[0], f[1] + s * gl[1]]; if (r[0] === 0) continue;
       return { prompt: `Let ~f(x) = ${lin(f[0], f[1])}~ and ~g(x) = ${lin(gl[0], gl[1])}~. Find ~(f ${op} g)(x)~.`, fields: one('(f ' + op + ' g)(x) =', AQ.exprCheck(x => (f[0] * x + f[1]) + s * (gl[0] * x + gl[1])), '~' + lin(r[0], r[1]) + '~', 'like 3x - 2'),
         hints: [`(f ${op} g)(x) means f(x) ${op} g(x).`, op === '-' ? 'Put g(x) in parentheses and distribute the minus sign to EVERY term.' : 'Combine like terms.', 'Write the result as simplified as you can.'], solution: [`~(${lin(f[0], f[1])}) ${op} (${lin(gl[0], gl[1])})~`, op === '-' ? 'Distribute the minus sign' : 'Remove parentheses', `~${lin(r[0], r[1])}~`] }; }
@@ -572,6 +578,7 @@ G['fn-comp'] = function () {
   const v = rnd(0, 2);
   for (;;) {
     const fa1 = [nz(-5, 5), nz(-9, 9)], gl = [nz(-5, 5), nz(-9, 9)], fq2 = [nz(-4, 4), nz(-8, 8), nz(-9, 9)], k = nz(-3, 3);
+    if (testFG(fa1[0], fa1[1], gl[0], gl[1])) continue;
     if (v === 0) { const inner = gl[0] * k + gl[1], val = fq2[0] * inner * inner + fq2[1] * inner + fq2[2];
       return { prompt: `Let ~f(x) = ${poly(fq2)}~ and ~g(x) = ${lin(gl[0], gl[1])}~. Find ~(f ∘ g)(${k})~.`, fields: one('(f∘g)(' + k + ') =', AQ.numCheck(val), '~' + val + '~', 'a number'),
         hints: ['(f ∘ g)(k) means f(g(k)): do g FIRST.', `Find g(${k}), then use that number as the input to f.`, 'Parentheses around negatives when you square!'], solution: [`~g(${k}) = ${inner}~`, `~f(${inner}) = ${val}~`] }; }
