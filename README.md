@@ -1,6 +1,6 @@
 # Algebra Quest
 
-**A college algebra study notebook that teaches the method, never the answer, and makes it stick.**
+**Master college algebra, one quest at a time.** Lessons that teach the method, hints that never give the answer, and flashcards that make it stick.
 
 Four chapters of college algebra, split into 27 short quests. Each quest takes you through three steps: **learn** the idea from a short lesson, worked examples and interactive graph labs; **remember** it with spaced-repetition flashcards; then **use** it on endless, randomly generated practice problems. A wrong answer gets feedback about the specific mistake, and hints point to the next step of the method without ever giving the answer. Daily review mixes everything together the way a real test does.
 
@@ -8,7 +8,7 @@ Four chapters of college algebra, split into 27 short quests. Each quest takes y
 
 Works in any modern browser on desktop, tablet or phone. No install, no account, no tracking. It also works offline once installed.
 
-![Today page: the daily study plan, day streak, and a notebook of the four chapters with practice and memory progress](docs/desktop.png)
+![Today page: the daily study plan, day streak, and the four chapters with practice and memory progress bars](docs/desktop.png)
 
 ---
 
@@ -38,7 +38,7 @@ Most study sites stop at "here's a problem, here's the answer." Algebra Quest is
 | **Immediate, specific feedback** | Knowing *what* went wrong right away stops mistakes from setting in | Every wrong answer gets a note about that exact mistake |
 
 ### Learn: lessons, worked examples and labs
-Each quest opens with a short lesson: the key rules in highlighted "📌" cards, the common traps in red, and worked examples that use their own numbers. Examples reveal **one step at a time**. Try the next step on paper, then click to check. When you're done, cover it and redo the whole thing yourself.
+Each quest opens with a short lesson: the key rules in "📌" cards, the common traps in red, and worked examples that use their own numbers. Examples reveal **one step at a time**. Try the next step on paper, then click to check. When you're done, cover it and redo the whole thing yourself.
 
 <img src="docs/lesson.png" alt="A worked example with two steps revealed, above the parabola-match lab with sliders for a, h and k" width="720">
 
@@ -115,10 +115,10 @@ The progress page shows your day streak, cards learned, stars, problems solved a
 
 <img src="docs/progress.png" alt="Progress page with stats, the memory-box chart and the Chapter 1 quest table" width="720">
 
-### Night study mode
-Daylight is a warm graph-paper notebook. Night study mode is easy on the eyes after dark. It follows your device setting by default, and the sidebar button switches it.
+### Dark mode
+The light theme is bright and clean; dark mode is easy on the eyes at night. It follows your device setting by default, and the sidebar button switches it.
 
-<img src="docs/dark.png" alt="Night study mode: the circles lesson with the circle-match lab" width="720">
+<img src="docs/dark.png" alt="Dark mode: the circles lesson with the circle-match lab" width="720">
 
 ### Made for phones too
 On a phone the sidebar becomes a slide-out menu and the quest steps fit across the screen. The three flashcard buttons sit within one thumb's reach.
@@ -130,9 +130,9 @@ On a phone the sidebar becomes a slide-out menu and the quest steps fit across t
 </p>
 
 ### Designed for readability
-- **AQ Legible** for reading is a version of [Atkinson Hyperlegible Next](https://www.brailleinstitute.org/freefont/), which the Braille Institute designed to make every character easy to tell apart. One change: the slash is removed from the zero so it can't be confused with the empty-set symbol ∅. **[Fraunces](https://github.com/undercasetype/Fraunces)** is used for headings.
+- **AQ Legible** for reading is a version of [Atkinson Hyperlegible Next](https://www.brailleinstitute.org/freefont/), which the Braille Institute designed to make every character easy to tell apart. One change: the slash is removed from the zero so it can't be confused with the empty-set symbol ∅. Headings and buttons use the rounded **[Nunito](https://github.com/googlefonts/nunito)**.
 - Fractions are drawn stacked (numerator over denominator), with real superscripts, subscripts and minus signs.
-- Key terms are marked like a highlighter pen, and traps are flagged in red.
+- Key terms are tinted, rules sit in colored cards, and traps are flagged in red. Big, chunky buttons are easy to hit on a phone.
 - Full keyboard support, visible focus outlines, screen-reader labels and live feedback regions. Animations switch off if your device asks for reduced motion.
 
 ---
@@ -221,7 +221,7 @@ python3 tests/test_offline.py
 
 ```
 index.html            page shell and Content Security Policy
-css/style.css         the notebook design system (daylight + night themes)
+css/style.css         the design system (light + dark themes)
 js/engine.js          math parser, answer checkers and math text renderer
 js/graph.js           small SVG graphing library
 js/gens1.js, gens2.js the 55 problem generators (Chapters 1–2 and 3–4)
@@ -236,7 +236,7 @@ docs/                 README screenshots
 ```
 
 ## Built with
-Plain HTML, CSS and JavaScript, about 3,400 lines in total, with no frameworks, no build step and no dependencies. Graphs are hand-rolled SVG. Fonts are self-hosted [Fraunces](https://github.com/undercasetype/Fraunces) and AQ Legible (based on [Atkinson Hyperlegible Next](https://github.com/googlefonts/atkinson-hyperlegible-next) and Mono), all under the SIL Open Font License.
+Plain HTML, CSS and JavaScript, about 3,400 lines in total, with no frameworks, no build step and no dependencies. Graphs are hand-rolled SVG. Fonts are self-hosted [Nunito](https://github.com/googlefonts/nunito) and AQ Legible (based on [Atkinson Hyperlegible Next](https://github.com/googlefonts/atkinson-hyperlegible-next) and Mono), all under the SIL Open Font License.
 
 ## About
 Made by **Christian Krantz** as a study aid for MAT 115 College Algebra at State Technical College of Missouri. Its companion project, [Subnet Sprint](https://github.com/ChristianJKrantz/subnet-sprint), does the same for IPv4 subnetting.

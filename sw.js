@@ -1,13 +1,13 @@
 /* Algebra Quest service worker: keeps a copy of the site on the device so it works offline.
    Pages are network-first and skip the browser's HTTP cache, so updates show up right away; fonts and icons
    (versioned URLs) are cache-first. Only this site's own files are handled. */
-const CACHE = 'algebra-quest-v6';
-const FONTS = ['fraunces-latin-600-normal', 'fraunces-latin-800-normal', 'fraunces-latin-600-italic',
+const CACHE = 'algebra-quest-v7';
+const FONTS = ['nunito-latin-700-normal', 'nunito-latin-800-normal', 'nunito-latin-900-normal',
   'aq-legible-latin-400-normal', 'aq-legible-latin-400-italic', 'aq-legible-latin-600-normal',
   'aq-legible-latin-700-normal', 'aq-legible-latin-800-normal',
   'aq-legible-mono-latin-400-normal', 'aq-legible-mono-latin-700-normal'].map(f => `fonts/${f}.woff2`);
 const CORE = ['./', 'index.html', 'css/style.css', 'js/engine.js', 'js/graph.js', 'js/gens1.js', 'js/gens2.js', 'js/content.js', 'js/cards.js', 'js/widgets.js', 'js/app.js',
-  'manifest.webmanifest?v=2', 'icon.svg?v=2', 'icon-192.png?v=2', 'icon-512.png?v=2', 'icon-maskable-512.png?v=2', 'apple-touch-icon.png?v=2', ...FONTS];
+  'manifest.webmanifest?v=3', 'icon.svg?v=3', 'icon-192.png?v=3', 'icon-512.png?v=3', 'icon-maskable-512.png?v=3', 'apple-touch-icon.png?v=3', ...FONTS];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));

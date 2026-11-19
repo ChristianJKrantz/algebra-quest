@@ -59,7 +59,7 @@ with sync_playwright() as p:
         pg.wait_for_selector('.result')
         # theme toggle, review, progress
         if label == 'mobile': pg.click('.menubtn')
-        pg.click('text=Night study mode'); chk(pg.evaluate("document.documentElement.dataset.theme") == 'dark', 'dark toggle failed')
+        pg.click('text=Dark mode'); chk(pg.evaluate("document.documentElement.dataset.theme") == 'dark', 'dark toggle failed')
         pg.goto(f'{BASE}#/review'); pg.wait_for_selector('.rgrid'); pg.goto(f'{BASE}#/review/cards'); pg.wait_for_selector('h1')
         pg.goto(f'{BASE}#/progress'); pg.wait_for_selector('.stat-grid'); overflow('progress')
         pg.goto(BASE + '#/'); pg.wait_for_selector('.plan'); overflow('home')

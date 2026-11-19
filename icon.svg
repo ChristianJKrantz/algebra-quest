@@ -1,16 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
 <title>Algebra Quest</title>
-<defs><clipPath id="r"><rect width="512" height="512" rx="112"/></clipPath></defs>
+<defs>
+  <clipPath id="r"><rect width="512" height="512" rx="112"/></clipPath>
+  <linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8466ff"/><stop offset="1" stop-color="#6a4cf5"/></linearGradient>
+</defs>
 <g clip-path="url(#r)">
-  <rect width="512" height="512" fill="#faf6ec"/>
-  <path d="M32 0V512M0 32H512M64 0V512M0 64H512M96 0V512M0 96H512M128 0V512M0 128H512M160 0V512M0 160H512M192 0V512M0 192H512M224 0V512M0 224H512M256 0V512M0 256H512M288 0V512M0 288H512M320 0V512M0 320H512M352 0V512M0 352H512M384 0V512M0 384H512M416 0V512M0 416H512M448 0V512M0 448H512M480 0V512M0 480H512" stroke="#2c5fc4" stroke-opacity=".1" stroke-width="2"/>
-  <rect x="0" y="0" width="92" height="128" fill="#d9502b"/><rect x="0" y="128" width="92" height="128" fill="#2c5fc4"/><rect x="0" y="256" width="92" height="128" fill="#1f8152"/><rect x="0" y="384" width="92" height="128" fill="#7a45b2"/>
-  <path d="M120 0V512" stroke="#d3c7a9" stroke-width="8" stroke-dasharray="4 18" stroke-linecap="round"/>
-  <g transform="translate(318 260) scale(1) translate(-318 -260)">
-    <path d="M226 370 C270 353 352 357 422 367 L418 413 C350 404 270 402 220 415Z" fill="#ffe46b"/>
-    <path d="M182 112 Q318 588 454 112" fill="none" stroke="#d9502b" stroke-width="36" stroke-linecap="round"/>
-    <circle cx="318" cy="350" r="25" fill="#1d2640"/>
+  <rect width="512" height="512" fill="url(#g)"/>
+  <rect y="452" width="512" height="60" fill="#4c30d6"/>
+  <g transform="translate(256 248) scale(1) translate(-256 -248)">
+    <path d="M118 122 Q256 520 394 122" fill="none" stroke="#3d24b8" stroke-opacity=".45" stroke-width="44" stroke-linecap="round" transform="translate(0 12)"/>
+    <path d="M118 122 Q256 520 394 122" fill="none" stroke="#ffffff" stroke-width="44" stroke-linecap="round"/>
+    <circle cx="256" cy="333" r="44" fill="#c98500"/>
+    <circle cx="256" cy="321" r="44" fill="#ffc83d"/>
+    <ellipse cx="242" cy="306" rx="14" ry="9" fill="#fff" fill-opacity=".6"/>
   </g>
 </g>
-<rect x="3" y="3" width="506" height="506" rx="109" fill="none" stroke="#1d2640" stroke-opacity=".14" stroke-width="6"/>
 </svg>

@@ -96,7 +96,7 @@ const sysDark = () => window.matchMedia && matchMedia('(prefers-color-scheme: da
 const isDark = () => store.theme ? store.theme === 'dark' : sysDark();
 function applyTheme() {
   document.documentElement.dataset.theme = isDark() ? 'dark' : 'light';
-  const m = document.querySelector('meta[name=theme-color]'); if (m) m.setAttribute('content', isDark() ? '#1b2031' : '#f2ecdc');
+  const m = document.querySelector('meta[name=theme-color]'); if (m) m.setAttribute('content', isDark() ? '#17193d' : '#ffffff');
 }
 
 /* ---------- sidebar ---------- */
@@ -105,8 +105,8 @@ let current = { page: 'home' };
 const openCh = new Set();
 let deferredInstall = null;
 function brand() {
-  return el('a', { class: 'brand', href: '#/' }, el('img', { src: 'icon.svg?v=2', alt: '', width: 38, height: 38 }),
-    el('div', null, el('div', { class: 'bt', html: 'Algebra <i>Quest</i>' }), el('small', { text: 'Study notebook' })));
+  return el('a', { class: 'brand', href: '#/' }, el('img', { src: 'icon.svg?v=3', alt: '', width: 38, height: 38 }),
+    el('div', null, el('div', { class: 'bt', html: 'Algebra <i>Quest</i>' }), el('small', { text: 'College algebra' })));
 }
 function mdots(tid) {
   const s = el('span', { class: 'mdots', title: 'Lesson read · cards learned · practice star' });
@@ -127,7 +127,7 @@ function refreshSide() {
     d.addEventListener('toggle', () => { if (d.open) openCh.add(c.n); else openCh.delete(c.n); });
     return d;
   });
-  const themeBtn = el('button', { class: 'toggle', type: 'button', text: isDark() ? '☀️  Daylight mode' : '🌙  Night study mode' });
+  const themeBtn = el('button', { class: 'toggle', type: 'button', text: isDark() ? '☀️  Light mode' : '🌙  Dark mode' });
   themeBtn.addEventListener('click', () => { store.theme = isDark() ? 'light' : 'dark'; applyTheme(); save(); });
   const install = el('button', { class: 'toggle', type: 'button', hidden: !deferredInstall, text: '⬇️  Install as an app' });
   install.addEventListener('click', () => { if (deferredInstall) { deferredInstall.prompt(); deferredInstall = null; install.hidden = true; } });
@@ -140,7 +140,7 @@ function refreshSide() {
   const mbtn = el('button', { class: 'menubtn', type: 'button', 'aria-label': 'Open menu', 'aria-expanded': String(document.body.classList.contains('menu-open')), text: '☰' });
   mbtn.addEventListener('click', () => { document.body.classList.add('menu-open'); mbtn.setAttribute('aria-expanded', 'true'); const f = side.querySelector('a'); if (f) f.focus(); });
   const mb = brand(); mb.querySelector('img').setAttribute('width', 32);
-  mtop.replaceChildren(mbtn, mb, el('a', { class: 'badge' + (due ? '' : ' zero'), href: '#/review', title: 'Cards due for review', text: '🔁 ' + due }));
+  mtop.replaceChildren(mbtn, mb, el('span', { class: 'streakchip', title: 'Day streak', text: '🔥 ' + dayStreak() }), el('a', { class: 'badge' + (due ? '' : ' zero'), href: '#/review', title: 'Cards due for review', text: '🔁 ' + due }));
 }
 document.getElementById('scrim').addEventListener('click', () => document.body.classList.remove('menu-open'));
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('menu-open')) document.body.classList.remove('menu-open'); });
@@ -458,11 +458,11 @@ function planCard() {
     el('div', { class: 'streak' }, el('span', { html: '🔥 <b>' + plural(dayStreak(), 'day') + '</b> streak' }), weekStrip()));
 }
 function pageHome() {
-  document.title = 'Algebra Quest · College algebra, step by step';
+  document.title = 'Algebra Quest · Master college algebra, one quest at a time';
   const tid = suggestTopic(), ns = nextStepFor(tid), started = Object.keys(store.topics).length > 0 || Object.keys(store.cards).length > 0;
   const hero = el('section', { class: 'hero' },
-    el('div', null, el('div', { class: 'kicker', text: 'College Algebra · 4 chapters · 27 quests' }), el('h1', { tabindex: '-1', html: 'Algebra, <em>one idea</em> at a time.' }),
-      el('p', { class: 'sub', html: 'Short lessons, worked examples you reveal step by step, graph labs to play with, and endless fresh practice. <span class="hl">Hints point you to the method but never give the answer.</span> Flashcards come back right before you’d forget them.' }),
+    el('div', null, el('div', { class: 'kicker', text: 'College Algebra · 4 chapters · 27 quests' }), el('h1', { tabindex: '-1', html: 'Master college algebra, <em>one quest at a time.</em>' }),
+      el('p', { class: 'sub', html: 'Short lessons, step-by-step examples, graph labs and endless fresh practice. <span class="hl">Hints show you the method, never the answer</span>, and flashcards come back right before you’d forget them.' }),
       el('div', { class: 'cta' }, el('a', { class: 'btn hot big', href: ns.href, text: started ? 'Continue: ' + topicIndex[tid].title + ' →' : 'Start Chapter 1 →' }), el('a', { class: 'btn big', href: '#/review', text: '🔁 Review' }))),
     planCard());
   const cards = chapters.map(c => {
@@ -471,14 +471,14 @@ function pageHome() {
     const b1 = el('i'), b2 = el('i');
     requestAnimationFrame(() => { b1.style.width = Math.round(100 * stars / max) + '%'; b2.style.width = mem + '%'; });
     return el('a', { class: 'nb', href: '#/ch/' + c.n, style: '--c:' + CH_COLOR[c.n] },
-      el('div', { class: 'top' }, el('span', { class: 'cn', text: String(c.n) }), el('h3', { text: c.title }), el('span', { class: 'em', text: c.emoji })),
+      el('div', { class: 'top' }, el('span', { class: 'cn', text: String(c.n) }), el('h3', { text: c.title, 'data-k': 'Chapter ' + c.n }), el('span', { class: 'em', text: c.emoji })),
       el('p', { text: c.blurb }),
       el('div', { class: 'meter' }, el('span', { text: '⭐ Practice' }), el('div', { class: 'bar' }, b1), el('span', { text: stars + '/' + max })),
       el('div', { class: 'meter' }, el('span', { text: '🧠 Memory' }), el('div', { class: 'bar' }, b2), el('span', { text: mem + '%' })));
   });
   const sci = (n, c, title, text, tag) => el('div', { class: 'sci', style: '--c:' + c }, el('div', { class: 'n', text: n }), el('b', { text: title }), el('p', { text: text }), el('small', { text: tag }));
   return el('div', null, hero,
-    el('h2', { text: 'Your notebook' }), el('div', { class: 'chgrid' }, cards),
+    el('h2', { text: 'Your chapters' }), el('div', { class: 'chgrid' }, cards),
     el('h2', { text: 'How this site helps it stick' }),
     el('div', { class: 'science' },
       sci('1', 'var(--ch1)', 'Learn from examples', 'Each worked example reveals one step at a time. Guess the next step before you click, then redo the whole thing on paper.', 'The worked-example effect'),
