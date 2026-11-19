@@ -25,6 +25,7 @@
   --edge:0 4px 0 var(--line);
   --shadow:0 4px 0 var(--line);
   --shadow-lg:0 4px 0 var(--line),0 18px 40px -22px rgba(40,30,120,.35);
+  --grid:rgba(106,76,245,.07); --grid-major:rgba(106,76,245,.13);
   --plot-bg:#ffffff; --plot-grid:#ececf6; --plot-axis:#6c6f93;
   --c-a:#6a4cf5; --c-b:#ff7a3d; --c-w:#e09400; --c-t:#a3a6c4;
   --display:Nunito,'Arial Rounded MT Bold',system-ui,sans-serif; --sans:Atkinson,system-ui,-apple-system,'Segoe UI',sans-serif; --mono:AtkMono,ui-monospace,Menlo,Consolas,monospace;
@@ -43,6 +44,7 @@
   --edge:0 4px 0 #0b0c24;
   --shadow:0 4px 0 #0b0c24;
   --shadow-lg:0 4px 0 #0b0c24,0 20px 44px -22px rgba(0,0,0,.8);
+  --grid:rgba(157,139,255,.06); --grid-major:rgba(157,139,255,.11);
   --plot-bg:#191b44; --plot-grid:#282b5e; --plot-axis:#9da2d0;
   --c-a:#9d8bff; --c-b:#ff9a62; --c-w:#ffc23d; --c-t:#6f74a8;
   color-scheme:dark;
@@ -50,7 +52,11 @@
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{margin:0;color:var(--ink);font:400 17.5px/1.62 var(--sans);background:var(--paper)}
+body{margin:0;color:var(--ink);font:400 17.5px/1.62 var(--sans);background-color:var(--paper);
+  /* graph paper: fine squares with a bolder line every fifth one */
+  background-image:linear-gradient(var(--grid-major) 1.5px,transparent 1.5px),linear-gradient(90deg,var(--grid-major) 1.5px,transparent 1.5px),
+    linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:120px 120px,120px 120px,24px 24px,24px 24px;background-position:-1px -1px}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer;touch-action:manipulation}
 a{color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
@@ -209,6 +215,7 @@ kbd{font:700 12px var(--mono);border:2px solid var(--line2);border-bottom-width:
 .chhead .big{width:84px;height:84px;border-radius:24px;display:grid;place-items:center;background:var(--c);color:var(--on-c);font:900 46px var(--display);flex:none;box-shadow:0 5px 0 color-mix(in srgb,var(--c) 65%,#000)}
 .chhead h1{margin-bottom:0}
 .chhead .sub{margin:6px 0 0}
+@media (max-width:560px){.chhead{flex-direction:column;align-items:flex-start;gap:14px}.chhead .big{width:64px;height:64px;border-radius:18px;font-size:34px}}
 .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
 .tcard{display:flex;flex-direction:column;gap:6px;background:var(--card);border:2px solid var(--line);border-radius:20px;padding:16px 18px;color:var(--ink);text-decoration:none;box-shadow:var(--shadow);position:relative;transition:transform .12s,border-color .12s}
 .tcard:hover{transform:translateY(-2px);border-color:var(--c)}
