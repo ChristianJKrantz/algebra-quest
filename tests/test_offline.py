@@ -27,7 +27,7 @@ with sync_playwright() as pw:
     ctx.set_offline(True)
     pg.reload(); pg.wait_for_selector('.plan', timeout=8000)
     ok('college algebra' in pg.locator('h1').inner_text().lower(), 'home page loads with no internet connection')
-    ok(pg.evaluate("Promise.all(['900 16px Nunito','400 16px Atkinson','700 16px AtkMono'].map(f=>document.fonts.load(f))).then(r=>r.every(x=>x.length>0))"), 'fonts load offline')
+    ok(pg.evaluate("Promise.all(['800 16px Fraunces','400 16px Serif4','600 16px Inter','700 16px AtkMono'].map(f=>document.fonts.load(f))).then(r=>r.every(x=>x.length>0))"), 'fonts load offline')
     pg.goto(URL + '#/ch/3/c3-quad'); pg.wait_for_selector('.widget svg')
     ok(True, 'lesson with graph lab works offline')
     pg.goto(URL + '#/ch/3/c3-quad/cards'); pg.wait_for_selector('.fc'); pg.keyboard.press('Space'); pg.keyboard.press('3')

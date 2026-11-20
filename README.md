@@ -2,13 +2,13 @@
 
 **Master college algebra, one quest at a time.** Lessons that teach the method, hints that never give the answer, and flashcards that make it stick.
 
-Four chapters of college algebra, split into 27 short quests. Each quest takes you through three steps: **learn** the idea from a short lesson, worked examples and interactive graph labs; **remember** it with spaced-repetition flashcards; then **use** it on endless, randomly generated practice problems. A wrong answer gets feedback about the specific mistake, and hints point to the next step of the method without ever giving the answer. Daily review mixes everything together the way a real test does.
+Designed like a printed textbook: every page is a sheet of paper with a running head, numbered sections, worked examples, key-rule boxes and notes in the margin. Four chapters of college algebra, split into 27 short sections (quests). Each quest takes you through three steps: **learn** the idea from a short lesson, worked examples and interactive graph labs; **remember** it with spaced-repetition flashcards; then **use** it on endless, randomly generated practice problems. A wrong answer gets feedback about the specific mistake, and hints point to the next step of the method without ever giving the answer. Daily review mixes everything together the way a real test does.
 
 ### ▶ [Study here](https://christianjkrantz.github.io/algebra-quest/)
 
 Works in any modern browser on desktop, tablet or phone. No install, no account, no tracking. It also works offline once installed.
 
-![Today page: the daily study plan, day streak, and the four chapters with practice and memory progress bars](docs/desktop.png)
+![Title page: today's assignment, a 7-day study calendar, and the table of contents with progress for every section](docs/desktop.jpg)
 
 ---
 
@@ -32,15 +32,15 @@ Most study sites stop at "here's a problem, here's the answer." Algebra Quest is
 | Technique | What it means | Where you'll find it |
 |---|---|---|
 | **Worked examples** | Studying a solved problem one step at a time beats struggling through it blind when an idea is new | Every lesson's examples reveal one step per click, with a prompt to predict the next step first |
-| **Retrieval practice** | Pulling an idea *out* of your memory strengthens it far more than reading it again | Flashcards, Recall mode, "Lock it in" summaries and the cheat sheet's Quiz-me mode |
+| **Retrieval practice** | Pulling an idea *out* of your memory strengthens it far more than reading it again | Flashcards, Recall mode, section summaries and the cheat sheet's Quiz-me mode |
 | **Spaced repetition** | Reviewing right before you'd forget makes memories last longer | Flashcards come back after 1, 3, 7, 16, 35 and 60 days |
-| **Interleaving** | Mixing problem types teaches you to *recognize* which method to use, which is half of every test | Daily mixed review and chapter challenges |
+| **Interleaving** | Mixing problem types teaches you to *recognize* which method to use, which is half of every test | Daily mixed review and chapter reviews |
 | **Immediate, specific feedback** | Knowing *what* went wrong right away stops mistakes from setting in | Every wrong answer gets a note about that exact mistake |
 
 ### Learn: lessons, worked examples and labs
-Each quest opens with a short lesson: the key rules in "📌" cards, the common traps in red, and worked examples that use their own numbers. Examples reveal **one step at a time**. Try the next step on paper, then click to check. When you're done, cover it and redo the whole thing yourself.
+Each section reads like a textbook page: numbered key-rule boxes, worked examples and labs (Example 1.4.2, Lab 3.1.1), with common traps and tips set in the margin beside the text. Every example uses its own numbers. Examples reveal **one step at a time**. Try the next step on paper, then click to check. When you're done, cover it and redo the whole thing yourself.
 
-<img src="docs/lesson.png" alt="A worked example with two steps revealed, above the parabola-match lab with sliders for a, h and k" width="720">
+<img src="docs/lesson.jpg" alt="A worked example with two steps revealed, above the parabola-match lab with sliders for a, h and k" width="720">
 
 The **10 interactive labs** let you build intuition by playing:
 
@@ -57,7 +57,7 @@ The **10 interactive labs** let you build intuition by playing:
 | **Exp & log lab:** why bˣ and log_b(x) are mirror images | Logarithms ↔ exponents |
 | **Growth lab:** how much does compounding monthly vs. continuously really matter? | Compound interest |
 
-### Remember: flashcards, Recall mode and Lock it in
+### Remember: flashcards, Recall mode and section summaries
 **Flashcards.** Each quest has its own deck (134 cards in all) of the facts and methods you need to know cold: formulas, rules, "what's the first step when…". Say your answer before you flip, then rate yourself honestly:
 
 | Rating | What happens |
@@ -66,17 +66,17 @@ The **10 interactive labs** let you build intuition by playing:
 | **Shaky** | Comes back tomorrow |
 | **Knew it** | Moves up a box. Boxes wait 1, 3, 7, 16, 35, then 60 days before the card comes back |
 
-Cards that are due pile up in **Review**, with a count badge in the sidebar so you always know what's waiting.
+Cards that are due pile up in **Review**, with a count beside Review in the menu bar so you always know what's waiting.
 
-<img src="docs/flashcard.png" alt="The back of a flashcard showing the quotient rule for logs, with Forgot, Shaky and Knew it buttons" width="720">
+<img src="docs/flashcard.jpg" alt="The back of a flashcard showing the quotient rule for logs, with Forgot, Shaky and Knew it buttons" width="720">
 
 **Recall mode.** Flip the switch at the top of any lesson and every key rule is covered. Say each rule from memory, then tap to check. It's made for your second read-through.
 
-<img src="docs/recall.png" alt="Recall mode on: the Multiply rule is covered with 'Say this rule from memory, then tap to check', while Add & subtract has been revealed" width="720">
+<img src="docs/recall.jpg" alt="Recall mode on: the Multiply rule is covered with 'Say this rule from memory, then tap to check', while Add & subtract has been revealed" width="720">
 
-**Lock it in.** Every lesson ends with the whole quest in a few lines. Cover them and test yourself before moving on.
+**Section summary.** Every lesson ends with the whole section in a few numbered lines. Cover them and test yourself before moving on.
 
-<img src="docs/lock-in.png" alt="Lock it in summary with two lines revealed and the rest covered" width="720">
+<img src="docs/lock-in.jpg" alt="Section summary with two lines revealed and the rest covered" width="720">
 
 ### Practice: endless problems, hints that never give it away
 Every practice problem is generated fresh, so you can't memorize answers, only methods. Type answers the way you'd write them on paper (see [Typing math](#typing-math)).
@@ -87,52 +87,53 @@ Every practice problem is generated fresh, so you can't memorize answers, only m
 - **Stars.** A quest earns ⭐ at 3, 8 and 15 problems solved on the first try without hints.
 
 <p>
-  <img src="docs/practice.png" alt="A quadratic inequality answered wrong, with feedback on the mistake and the first hint shown" width="420">
-  <img src="docs/worked-answer.png" alt="The worked answer revealed step by step" width="420">
+  <img src="docs/practice.jpg" alt="A quadratic inequality answered wrong, with feedback on the mistake and the first hint shown" width="420">
+  <img src="docs/worked-answer.jpg" alt="The worked answer revealed step by step" width="420">
 </p>
 
-### Review: daily plan, mixed sets and chapter challenges
-- **Today's study plan** on the home page puts about 15 minutes of work in order: flashcards due → your next quest step → a mixed problem set. It also shows your day streak and a 7-day calendar.
+### Review: daily assignment, mixed sets and chapter reviews
+- **Today's assignment** on the title page puts about 15 minutes of work in order: flashcards due → your next quest step → a mixed problem set. It also shows your day streak and a 7-day calendar.
 - **Mixed review:** 8 problems drawn from every topic you've practiced, weighted toward the ones you miss most and the ones you haven't seen lately. Nothing tells you which method to use, just like on a test.
-- **Chapter challenges:** 10 mixed problems covering every quest in a chapter. First-try answers earn 10 points, later answers 5, and revealed answers 0. Afterward you get a list of quests worth another look, with links to their lessons and flashcards.
+- **Chapter reviews:** 10 mixed problems covering every quest in a chapter. First-try answers earn 10 points, later answers 5, and revealed answers 0. Afterward you get a list of quests worth another look, with links to their lessons and flashcards.
 
-<img src="docs/review.png" alt="Review page with 13 flashcards due and a mixed problem set" width="720">
+<img src="docs/review.jpg" alt="Review page with 13 flashcards due and a mixed problem set" width="720">
 
 ### Practice-test prep map
 Each chapter page lists the skill behind every problem on that chapter's practice test and links to the quest that teaches it. It gives **only the skill, never the problem or its answer**.
 
 The practice problems are guaranteed never to reproduce a practice-test problem. [`tests/test_no_test_problems.js`](tests/test_no_test_problems.js) generates hundreds of thousands of problems and scans every lesson, example and flashcard to prove it. To keep the test problems themselves out of this public repo, it compares against SHA-256 fingerprints of them instead of the problems.
 
-<img src="docs/prep-map.png" alt="Practice-test prep map: problem numbers, the skill each one tests, and links to the quests" width="720">
+<img src="docs/prep-map.jpg" alt="Practice-test prep map: problem numbers, the skill each one tests, and links to the quests" width="720">
 
 ### Cheat sheets with a Quiz-me mode
 Every chapter has a one-page cheat sheet of the rules, ready to print. **Quiz me** covers every line so you can write the rules from memory onto a notecard, then tap each one to check.
 
-<img src="docs/cheat-sheet.png" alt="Chapter 4 cheat sheet in Quiz-me mode with some lines revealed" width="720">
+<img src="docs/cheat-sheet.jpg" alt="Chapter 4 cheat sheet in Quiz-me mode with some lines revealed" width="720">
 
 ### Progress
 The progress page shows your day streak, cards learned, stars, problems solved and XP, plus a chart of how many cards sit in each memory box. A table for each chapter shows, per quest, whether you've read the lesson, your memory strength, your stars and your first-try rate.
 
-<img src="docs/progress.png" alt="Progress page with stats, the memory-box chart and the Chapter 1 quest table" width="720">
+<img src="docs/progress.jpg" alt="Progress page with stats, the memory-box chart and the Chapter 1 quest table" width="720">
 
 ### Dark mode
-The light theme is bright and clean; dark mode is easy on the eyes at night. It follows your device setting by default, and the sidebar button switches it.
+Day mode is cream paper on a light desk; dark mode is a reading-lamp version that's easy on the eyes at night. It follows your device setting by default, and the button in the menu bar switches it.
 
-<img src="docs/dark.png" alt="Dark mode: the circles lesson with the circle-match lab" width="720">
+<img src="docs/dark.jpg" alt="Dark mode: the circles lesson with the circle-match lab" width="720">
 
 ### Made for phones too
-On a phone the sidebar becomes a slide-out menu and the quest steps fit across the screen. The three flashcard buttons sit within one thumb's reach.
+On a phone the page fills the screen, the chapters open as a slide-out table of contents, and the section steps fit across the screen. The three flashcard buttons sit within one thumb's reach.
 
 <p>
-  <img src="docs/phone-home.png" alt="Phone: home page and study plan" width="250">
-  <img src="docs/phone-flashcard.png" alt="Phone: a flashcard with the three rating buttons" width="250">
-  <img src="docs/phone-menu.png" alt="Phone: the chapter menu with progress dots" width="250">
+  <img src="docs/phone-home.jpg" alt="Phone: title page" width="250">
+  <img src="docs/phone-flashcard.jpg" alt="Phone: a flashcard with the three rating buttons" width="250">
+  <img src="docs/phone-menu.jpg" alt="Phone: the chapter menu with progress dots" width="250">
 </p>
 
 ### Designed for readability
-- **AQ Legible** for reading is a version of [Atkinson Hyperlegible Next](https://www.brailleinstitute.org/freefont/), which the Braille Institute designed to make every character easy to tell apart. One change: the slash is removed from the zero so it can't be confused with the empty-set symbol ∅. Headings and buttons use the rounded **[Nunito](https://github.com/googlefonts/nunito)**.
+- Set like a book: **[Source Serif 4](https://github.com/adobe-fonts/source-serif)** for reading, **[Fraunces](https://github.com/undercasetype/Fraunces)** for headings and **[Inter](https://rsms.me/inter/)** for labels and buttons.
+- Typed answers use **AQ Legible Mono**, a version of [Atkinson Hyperlegible Mono](https://www.brailleinstitute.org/freefont/) with the slash removed from the zero so it can't be confused with the empty-set symbol ∅.
 - Fractions are drawn stacked (numerator over denominator), with real superscripts, subscripts and minus signs.
-- Key terms are tinted, rules sit in colored cards, and traps are flagged in red. Big, chunky buttons are easy to hit on a phone.
+- A real page: subtle paper grain, a page stack and running heads, colored chapter tabs on the page edge, and a table of contents with dotted leaders.
 - Full keyboard support, visible focus outlines, screen-reader labels and live feedback regions. Animations switch off if your device asks for reduced motion.
 
 ---
@@ -167,7 +168,7 @@ Multiplication can be implied (`2x`, `3(x+1)`), and a **⌨ Math keys** button u
 Algebra Quest works as an app. Install it once and it opens full screen from its own icon, and it keeps working with no internet connection.
 
 - **iPhone / iPad:** open the site in Safari, tap **Share**, then **Add to Home Screen**.
-- **Android / Chrome / Edge:** tap **⬇️ Install as an app** in the sidebar, or use the browser's install option.
+- **Android / Chrome / Edge:** tap **Install app** in the menu bar, or use the browser's install option.
 
 A service worker saves a copy of the site, including its fonts, on your device on your first visit. Online, you always get the newest version; offline, the saved copy loads instead. Your progress is stored on the device either way.
 
@@ -228,7 +229,7 @@ js/gens1.js, gens2.js the 55 problem generators (Chapters 1–2 and 3–4)
 js/content.js         lessons, worked examples, cheat sheets and prep maps
 js/cards.js           the 134 flashcards
 js/widgets.js         the 10 interactive labs
-js/app.js             router, study plan, flashcards, practice, review and progress
+js/app.js             router, page layout, flashcards, practice, review and progress
 sw.js                 offline support
 fonts/                self-hosted fonts and their licenses
 tests/                the test suite
@@ -236,7 +237,7 @@ docs/                 README screenshots
 ```
 
 ## Built with
-Plain HTML, CSS and JavaScript, about 3,400 lines in total, with no frameworks, no build step and no dependencies. Graphs are hand-rolled SVG. Fonts are self-hosted [Nunito](https://github.com/googlefonts/nunito) and AQ Legible (based on [Atkinson Hyperlegible Next](https://github.com/googlefonts/atkinson-hyperlegible-next) and Mono), all under the SIL Open Font License.
+Plain HTML, CSS and JavaScript, about 3,400 lines in total, with no frameworks, no build step and no dependencies. Graphs are hand-rolled SVG. Fonts are self-hosted Fraunces, Source Serif 4, Inter and AQ Legible Mono (based on Atkinson Hyperlegible Mono), all under the SIL Open Font License.
 
 ## About
 Made by **Christian Krantz** as a study aid for MAT 115 College Algebra at State Technical College of Missouri. Its companion project, [Subnet Sprint](https://github.com/ChristianJKrantz/subnet-sprint), does the same for IPv4 subnetting.

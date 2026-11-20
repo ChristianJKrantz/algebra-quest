@@ -79,7 +79,7 @@ with sync_playwright() as pw:
     ok(not errs, f'tampered or corrupt saved data never crashes the site {errs[:2]}')
     pg.evaluate("d => localStorage.setItem('algebra-quest-v1', d)", json.dumps(evil)); pg.goto(URL + '#/progress'); pg.wait_for_selector('.stat-grid')
     ok(pg.evaluate("({}).polluted") is None, 'saved data cannot pollute JavaScript object prototypes')
-    xp = pg.locator('.xpline b').inner_text()
+    xp = pg.locator('.xpline b').first.inner_text()
     ok(xp == '0 XP', f'invalid saved values are reset to safe defaults (XP shows "{xp}")')
 
     print('Storage blocked')
