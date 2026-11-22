@@ -41,7 +41,7 @@ function sanitize(o) {
   s.xp = clampInt(o.xp, 0, 1e7); s.best = clampInt(o.best, 0, 1e5);
   Object.keys(topicIndex).forEach(id => {
     const t = o.topics && o.topics[id];
-    if (t && typeof t === 'object') s.topics[id] = { tried: clampInt(t.tried, 0, 1e5), first: clampInt(t.first, 0, 1e5), miss: clampInt(t.miss, 0, 1e5), last: clampInt(t.last, 0, 1e13), read: t.read ? 1 : 0 };
+    if (t && typeof t === 'object') s.topics[id] = { tried: clampInt(t.tried, 0, 1e5), first: clampInt(t.first, 0, 1e5), miss: clampInt(t.miss, 0, 1e5), revisit: t.revisit === undefined ? Number(t.miss) > 0 : !!t.revisit, last: clampInt(t.last, 0, 1e13), read: t.read ? 1 : 0 };
   });
   [1, 2, 3, 4].forEach(n => { if (o.boss && o.boss[n] !== undefined) s.boss[n] = clampInt(o.boss[n], 0, 100); });
   if (o.cards && typeof o.cards === 'object') Object.keys(o.cards).forEach(id => { const c = o.cards[id]; if (CARD_BY_ID[id] && c && typeof c === 'object') s.cards[id] = { b: clampInt(c.b, 0, 6), d: clampInt(c.d, 0, 1e13) }; });
@@ -297,6 +297,7 @@ function renderProblem(host, p, o) {
       else b.ctl.querySelectorAll('.pillbtn').forEach(x => { x.classList.toggle('ok', r.ok); x.classList.toggle('bad', !r.ok); });
       b.msg.className = 'fmsg' + (r.ok ? ' good' : ''); b.msg.textContent = r.ok ? '✓ Correct' : r.msg;
     });
+    if (good < p.fields.length && o.topicId && !tStat(o.topicId).revisit) { tMut(o.topicId).revisit = true; save(); }
     if (good === p.fields.length) {
       const first = attempts === 1 && hintsUsed === 0, xp = first ? 10 : 6;
       lock(); say('good', first ? '<b>Correct on the first try.</b> +' + xp + ' XP' : '<b>Correct.</b> +' + xp + ' XP. First-try answers without hints count toward stars.');
@@ -316,10 +317,11 @@ function renderProblem(host, p, o) {
     report({ firstTry: false, revealed: true, attempts, hintsUsed, xp: 0 }); nextBox.append(goNext);
   });
   card.append(form, hintsBox, feed, solBox, nextBox); host.append(card);
-  if (firstInput && o.autofocus !== false) firstInput.focus({ preventScroll: true });
+  if (firstInput && o.autofocus !== false && !matchMedia('(pointer: coarse)').matches) firstInput.focus({ preventScroll: true });
 }
 function recordProblem(tid, r) {
   const before = starsOf(tid), t = tMut(tid);
+  t.revisit = !r.firstTry;
   t.tried++; if (r.firstTry) t.first++; else t.miss++; t.last = Date.now();
   store.xp += r.xp; markStudy(); save();
   if (starsOf(tid) > before) toast('New star earned: “' + topicIndex[tid].title + '”!');
@@ -337,7 +339,7 @@ function runPractice(host, topic) {
   const nextProblem = () => {
     let p; for (let i = 0; i < 6; i++) { p = makeProblem(topic.practice); if (p.prompt !== last) break; } last = p.prompt;
     renderProblem(stage, p, {
-      label: 'Problem ' + (sess.solved + 1), right: topic.title,
+      topicId: topic.id, label: 'Problem ' + (sess.solved + 1), right: topic.title,
       onSolved: r => { if (r.firstTry) { sess.first++; sess.streak++; } else sess.streak = 0; sess.solved++; store.best = Math.max(store.best, sess.streak); recordProblem(topic.id, r); upd(); },
       onNext: () => { nextProblem(); stage.scrollIntoView({ block: 'nearest' }); }
     });
@@ -400,7 +402,7 @@ function runSet(host, items, o) {
     if (idx >= items.length) return o.finish(results, stage);
     const it = items[idx]; let p; try { p = gens[it.gid](); } catch (e) { p = makeProblem(topicIndex[it.tid].practice); }
     renderProblem(stage, p, {
-      label: o.label + ' ' + (idx + 1) + ' of ' + items.length, right: topicIndex[it.tid].title, nextLabel: idx === items.length - 1 ? 'See my results →' : 'Next →',
+      topicId: it.tid, label: o.label + ' ' + (idx + 1) + ' of ' + items.length, right: topicIndex[it.tid].title, nextLabel: idx === items.length - 1 ? 'See my results →' : 'Next →',
       onSolved: r => { results[idx] = { tid: it.tid, firstTry: r.firstTry, revealed: r.revealed }; recordProblem(it.tid, r); }, onNext: () => { idx++; step(); window.scrollTo(0, 0); }
     });
   };
@@ -511,6 +513,13 @@ function pageHome() {
       sci('2', 'var(--ch2)', 'Recall, don’t reread', 'Flashcards, covered rules and the cheat sheet’s quiz mode make you pull ideas out of memory. Rereading feels productive; recalling is what works.', 'Retrieval practice'),
       sci('3', 'var(--ch3)', 'Space it and mix it', 'Cards come back after 1, 3, 7, 16 days and longer, and mixed review shuffles topics the way a test does.', 'Spacing and interleaving')));
 }
+function missedTopicReview() {
+  const topics = Object.values(topicIndex).filter(t => tStat(t.id).revisit)
+    .sort((a, b) => tStat(b.id).miss - tStat(a.id).miss);
+  return el('section', { class: 'missed-topics' }, el('h2', { text: 'Topics to retry' }),
+    el('p', { text: topics.length ? 'Solve a fresh problem on your first try to clear that topic.' : 'Topics appear here when you miss a practice problem.' }),
+    ...topics.map(t => el('a', { class: 'btn', href: '#/ch/' + t.ch + '/' + t.id + '/practice', text: t.title + ' →' })));
+}
 function pageReview() {
   document.title = 'Review · Algebra Quest';
   folio = { head: ['Review', 'Spaced repetition'], foot: ['Algebra Quest', 'R', 'Review'] };
@@ -518,6 +527,7 @@ function pageReview() {
   const next = ALL_CARDS.map(c => cs(c.id)).filter(s => s.b >= 1 && s.d > Date.now()).map(s => s.d).sort((a, b) => a - b)[0];
   return el('div', null, el('div', { class: 'kicker', text: 'Spaced review' }), el('h1', { tabindex: '-1', text: 'Review' }),
     el('p', { class: 'sub', text: 'Ten focused minutes here each day beats an all-night cram. Do the cards first, then a mixed set.' }),
+    missedTopicReview(),
     el('div', { class: 'rgrid' },
       el('div', { class: 'rcard', style: '--c:var(--accent)' }, el('div', { class: 'bign', text: String(due.length) }), el('h3', { text: 'Flashcards due' }),
         el('p', { text: due.length ? 'These are the cards your memory is about to drop. Catch them now.' : learned ? 'All caught up. Your next card comes back ' + (next ? whenText(next) : 'soon') + '. Learn new decks from any section.' : 'You haven’t started a deck yet. Open any section and choose the Flashcards step.' }),

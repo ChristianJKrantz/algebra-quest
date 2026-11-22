@@ -476,3 +476,7 @@ table.synth tr.rule td.kcell{border-top:0}
   .folio{margin:0;border:0;box-shadow:none;padding:0}.folio::before,.folio::after{display:none}
   .cheat.quiz li{color:#111}.cheat.quiz li::after{content:none}
 }
+
+.missed-topics{border-block:1px solid var(--line2);margin-block:1.5rem;padding-block:1rem}
+.missed-topics h2{margin:0}.missed-topics .btn{margin:0 .4rem .4rem 0;white-space:normal}
+@media(max-width:600px){.pactions .btn,.pills .pillbtn,.missed-topics .btn{min-height:44px}.fld input[type=text]{font-size:16px}}
