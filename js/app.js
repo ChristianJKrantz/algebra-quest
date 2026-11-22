@@ -104,7 +104,7 @@ const side = document.getElementById('side'), topEl = document.getElementById('t
 let current = { page: 'home' };
 let deferredInstall = null;
 function brand() {
-  return el('a', { class: 'brand', href: '#/', 'aria-label': 'Algebra Quest home' }, el('img', { src: 'icon.svg?v=5', alt: '', width: 30, height: 30 }),
+  return el('a', { class: 'brand', href: '#/', 'aria-label': 'Algebra Quest home' }, el('img', { src: 'icon.svg?v=6', alt: '', width: 30, height: 30 }),
     el('span', { class: 'bt', html: 'Algebra <i>Quest</i>' }));
 }
 function mdots(tid) {
@@ -494,8 +494,8 @@ function pageHome() {
   folio = { head: ['Algebra Quest', 'College Algebra'], foot: ['A study companion', 'i', '4 chapters · 27 sections'] };
   const tid = suggestTopic(), ns = nextStepFor(tid), started = Object.keys(store.topics).length > 0 || Object.keys(store.cards).length > 0;
   const hero = el('section', { class: 'hero' },
-    el('div', null, el('div', { class: 'kicker', text: 'College Algebra · A study companion' }), el('h1', { tabindex: '-1', html: 'Master college algebra, <em>one quest at a time.</em>' }),
-      el('p', { class: 'sub', text: 'Short lessons, worked examples you reveal step by step, graph labs and endless fresh practice. Hints show you the method, never the answer, and flashcards come back right before you’d forget them.' }),
+    el('div', null, el('div', { class: 'kicker', text: 'College algebra' }), el('h1', { tabindex: '-1', html: 'The algebra <em>workbook.</em>' }),
+      el('p', { class: 'sub', text: 'Work through a lesson, try a fresh problem, or revisit the topics you missed.' }),
       el('div', { class: 'cta' }, el('a', { class: 'btn hot big', href: ns.href, text: started ? 'Continue with §' + SEC_NO[tid] + ' →' : 'Begin Chapter 1 →' }), el('a', { class: 'btn big', href: '#/review', text: 'Review' }))),
     planCard());
   const toc = el('ol', { class: 'toc' }, chapters.map(c => {

@@ -480,3 +480,17 @@ table.synth tr.rule td.kcell{border-top:0}
 .missed-topics{border-block:1px solid var(--line2);margin-block:1.5rem;padding-block:1rem}
 .missed-topics h2{margin:0}.missed-topics .btn{margin:0 .4rem .4rem 0;white-space:normal}
 @media(max-width:600px){.pactions .btn,.pills .pillbtn,.missed-topics .btn{min-height:44px}.fld input[type=text]{font-size:16px}}
+
+@media screen {
+:root:not([data-theme=dark]){--accent:#802b40;--accent-dark:#642032;--accent-soft:#f6e7e9;--desk:#e4d9c8;--paper:#fcf7ee;--paper2:#f4eadb;--line:#d8c9b3;--line2:#bda88e}
+:root[data-theme=dark]{--accent:#efacba;--accent-soft:#38232b}
+.top{background:var(--paper);border-bottom:2px solid var(--accent)}.brand img{border-radius:7px}.brand .bt{letter-spacing:-.045em}
+.folio{border-radius:2px}.hero{gap:20px;align-items:stretch}.hero>div:first-child{isolation:isolate;position:relative;overflow:hidden;background:#702638;color:#fff2da;padding:clamp(22px,3.4vw,42px);border-radius:3px}
+.hero>div:first-child::after{content:"";position:absolute;z-index:-1;width:150px;height:150px;right:-88px;bottom:-58px;transform:rotate(-24deg);border-radius:50%;border:1px solid #eac08070;box-shadow:0 0 0 11px #702638,0 0 0 12px #eac08066,0 0 0 23px #702638,0 0 0 24px #eac08055,0 0 0 35px #702638,0 0 0 36px #eac08044}
+.hero .kicker{color:#f2ce97}.hero h1{color:#fff4e0;font-size:clamp(34px,5vw,57px);letter-spacing:-.045em}.hero h1 em{color:#ffcf89}.hero .sub{color:#f5e4d4;font-size:18px;line-height:1.46;max-width:40ch}
+.hero .cta .btn{background:transparent;border-color:#d6a899;color:#fff2dd}.hero .cta .btn.hot{background:#f4ca82;border-color:#f4ca82;color:#4c241c}
+.plan{border:1px solid var(--line2);border-top:4px double var(--accent);background:var(--paper2)}.plan .when{font-style:italic}
+.pcard{border-top:4px double var(--accent);border-radius:3px;box-shadow:4px 5px 0 var(--paper2)}.pprompt{font-family:var(--serif)}
+.missed-topics{border-block:3px double var(--line2)}.tocch .cn{font-style:italic}
+@media(max-width:600px){.hero{gap:16px}.hero>div:first-child{padding:23px 19px}.hero .sub{font-size:17px}.hero h1{margin-bottom:10px}.hero .cta{gap:6px}.hero .cta .btn{min-height:44px}.pcard{padding:15px}}
+}
