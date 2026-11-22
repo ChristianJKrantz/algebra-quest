@@ -1,14 +1,16 @@
+<img align="right" src="icon-192.png" alt="" width="64" height="64">
+
 # Algebra Quest
 
-**Master college algebra, one quest at a time.** Lessons that teach the method, hints that never give the answer, and flashcards that make it stick.
+**An interactive college algebra workbook.** Lessons that teach the method, hints that never give the answer, and flashcards that make it stick.
 
-Designed like a printed textbook: every page is a sheet of paper with a running head, numbered sections, worked examples, key-rule boxes and notes in the margin. Four chapters of college algebra, split into 27 short sections (quests). Each quest takes you through three steps: **learn** the idea from a short lesson, worked examples and interactive graph labs; **remember** it with spaced-repetition flashcards; then **use** it on endless, randomly generated practice problems. A wrong answer gets feedback about the specific mistake, and hints point to the next step of the method without ever giving the answer. Daily review mixes everything together the way a real test does.
+The burgundy-and-gold cover opens to today’s assignment. Inside, every page is a sheet of paper with a running head, numbered sections, worked examples, key-rule boxes and notes in the margin. Four chapters of college algebra, split into 27 short sections (quests). Each quest takes you through three steps: **learn** the idea from a short lesson, worked examples and interactive graph labs; **remember** it with spaced-repetition flashcards; then **use** it on endless, randomly generated practice problems. A wrong answer gets feedback about the specific mistake, and hints point to the next step of the method without ever giving the answer. Open **Review → Topics to retry** to return to a missed topic, even if you left the problem unfinished. A fresh first-try solve clears it from the list. The open-book icon identifies the installed workbook.
 
 ### ▶ [Study here](https://christianjkrantz.github.io/algebra-quest/)
 
 Works in any modern browser on desktop, tablet or phone. No install, no account, no tracking. It also works offline once installed.
 
-![Title page: today's assignment, a 7-day study calendar, and the table of contents with progress for every section](docs/desktop.jpg)
+![The Algebra Quest workbook cover and today’s assignment](docs/desktop.jpg)
 
 ---
 
@@ -40,7 +42,7 @@ Most study sites stop at "here's a problem, here's the answer." Algebra Quest is
 ### Learn: lessons, worked examples and labs
 Each section reads like a textbook page: numbered key-rule boxes, worked examples and labs (Example 1.4.2, Lab 3.1.1), with common traps and tips set in the margin beside the text. Every example uses its own numbers. Examples reveal **one step at a time**. Try the next step on paper, then click to check. When you're done, cover it and redo the whole thing yourself.
 
-<img src="docs/lesson.jpg" alt="A worked example with two steps revealed, above the parabola-match lab with sliders for a, h and k" width="720">
+<img src="docs/lesson.jpg" alt="A worked example in the quadratic equations lesson" width="720">
 
 The **10 interactive labs** let you build intuition by playing:
 
@@ -68,15 +70,15 @@ The **10 interactive labs** let you build intuition by playing:
 
 Cards that are due pile up in **Review**, with a count beside Review in the menu bar so you always know what's waiting.
 
-<img src="docs/flashcard.jpg" alt="The back of a flashcard showing the quotient rule for logs, with Forgot, Shaky and Knew it buttons" width="720">
+<img src="docs/flashcard.jpg" alt="The back of a quadratic equations flashcard with three recall ratings" width="720">
 
 **Recall mode.** Flip the switch at the top of any lesson and every key rule is covered. Say each rule from memory, then tap to check. It's made for your second read-through.
 
-<img src="docs/recall.jpg" alt="Recall mode on: the Multiply rule is covered with 'Say this rule from memory, then tap to check', while Add & subtract has been revealed" width="720">
+<img src="docs/recall.jpg" alt="A covered rule in the quadratic equations lesson with Recall mode enabled" width="720">
 
 **Section summary.** Every lesson ends with the whole section in a few numbered lines. Cover them and test yourself before moving on.
 
-<img src="docs/lock-in.jpg" alt="Section summary with two lines revealed and the rest covered" width="720">
+<img src="docs/lock-in.jpg" alt="A section summary with one line revealed for self-testing" width="720">
 
 ### Practice: endless problems, hints that never give it away
 Every practice problem is generated fresh, so you can't memorize answers, only methods. Type answers the way you'd write them on paper (see [Typing math](#typing-math)).
@@ -87,7 +89,7 @@ Every practice problem is generated fresh, so you can't memorize answers, only m
 - **Stars.** A quest earns ⭐ at 3, 8 and 15 problems solved on the first try without hints.
 
 <p>
-  <img src="docs/practice.jpg" alt="A quadratic inequality answered wrong, with feedback on the mistake and the first hint shown" width="420">
+  <img src="docs/practice.jpg" alt="An algebra practice problem with feedback on an incorrect entry" width="420">
   <img src="docs/worked-answer.jpg" alt="The worked answer revealed step by step" width="420">
 </p>
 
@@ -96,7 +98,7 @@ Every practice problem is generated fresh, so you can't memorize answers, only m
 - **Mixed review:** 8 problems drawn from every topic you've practiced, weighted toward the ones you miss most and the ones you haven't seen lately. Nothing tells you which method to use, just like on a test.
 - **Chapter reviews:** 10 mixed problems covering every quest in a chapter. First-try answers earn 10 points, later answers 5, and revealed answers 0. Afterward you get a list of quests worth another look, with links to their lessons and flashcards.
 
-<img src="docs/review.jpg" alt="Review page with 13 flashcards due and a mixed problem set" width="720">
+<img src="docs/review.jpg" alt="Review with a saved topic to retry and a link back to practice" width="720">
 
 ### Practice-test prep map
 Each chapter page lists the skill behind every problem on that chapter's practice test and links to the quest that teaches it. It gives **only the skill, never the problem or its answer**.
@@ -118,7 +120,7 @@ The progress page shows your day streak, cards learned, stars, problems solved a
 ### Dark mode
 Day mode is cream paper on a light desk; dark mode is a reading-lamp version that's easy on the eyes at night. It follows your device setting by default, and the button in the menu bar switches it.
 
-<img src="docs/dark.jpg" alt="Dark mode: the circles lesson with the circle-match lab" width="720">
+<img src="docs/dark.jpg" alt="A quadratic equations lesson in dark mode" width="720">
 
 ### Made for phones too
 On a phone the page fills the screen, the chapters open as a slide-out table of contents, and the section steps fit across the screen. The three flashcard buttons sit within one thumb's reach.
