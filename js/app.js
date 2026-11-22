@@ -112,23 +112,25 @@ function mdots(tid) {
   [tStat(tid).read, learnedCount(tid) >= Math.ceil(cardsOf(tid).length / 2), starsOf(tid) >= 1].forEach(on => s.append(el('i', { class: on ? 'on' : '' })));
   return s;
 }
-function setMenu(open) {
+let menuOpener;
+function setMenu(open, opener) {
+  if (open) menuOpener = opener;
   document.body.classList.toggle('menu-open', open);
   topEl.querySelectorAll('[aria-controls=side]').forEach(b => b.setAttribute('aria-expanded', String(open)));
-  if (open) { const f = side.querySelector('.mq.on') || side.querySelector('a'); if (f) f.focus({ preventScroll: true }); }
+  if (open) { const links = Array.from(side.querySelectorAll('a')).filter(a => a.getClientRects().length); const f = links.find(a => a.classList.contains('on')) || links[0]; if (f) f.focus({ preventScroll: true }); }
 }
 function refreshSide() {
   const due = dueCards().length, p = current;
   const count = n => el('span', { class: 'count' + (n ? '' : ' zero'), text: String(n) });
   const navA = (href, text, on, extra) => el('a', { href, class: on ? 'on' : '', 'aria-current': on ? 'page' : null }, text, extra || null);
   const chBtn = el('button', { type: 'button', class: ['chapter', 'topic', 'boss', 'cheat'].includes(p.page) ? 'on' : '', 'aria-controls': 'side', 'aria-expanded': String(document.body.classList.contains('menu-open')) }, 'Chapters', el('span', { class: 'chev', text: '▾' }));
-  chBtn.addEventListener('click', () => setMenu(!document.body.classList.contains('menu-open')));
+  chBtn.addEventListener('click', () => setMenu(!document.body.classList.contains('menu-open'), chBtn));
   const themeBtn = () => { const b = el('button', { class: 'iconbtn theme', type: 'button', text: isDark() ? 'Light mode' : 'Dark mode' }); b.addEventListener('click', () => { store.theme = isDark() ? 'light' : 'dark'; applyTheme(); save(); }); return b; };
   const install = () => { const b = el('button', { class: 'iconbtn', type: 'button', hidden: !deferredInstall, text: 'Install app' }); b.addEventListener('click', () => { if (deferredInstall) { deferredInstall.prompt(); deferredInstall = null; refreshSide(); } }); return b; };
   const xp = () => el('span', { class: 'tpill xpline' }, el('b', { text: store.xp + ' XP' }));
   const streak = dayStreak();
   const mbtn = el('button', { class: 'menubtn', type: 'button', 'aria-label': 'Open menu', 'aria-controls': 'side', 'aria-expanded': String(document.body.classList.contains('menu-open')), text: '☰' });
-  mbtn.addEventListener('click', () => setMenu(true));
+  mbtn.addEventListener('click', () => setMenu(true, mbtn));
   topEl.replaceChildren(el('div', { class: 'in' }, mbtn, brand(),
     el('nav', { class: 'mainnav', 'aria-label': 'Main' }, navA('#/', 'Today', p.page === 'home'), chBtn, navA('#/review', 'Review', p.page === 'review', count(due)), navA('#/progress', 'Progress', p.page === 'progress')),
     el('div', { class: 'topright' }, el('a', { class: 'count' + (due ? '' : ' zero') + ' mobile-due', href: '#/review', title: 'Flashcards due', text: due + ' due' }),
@@ -143,8 +145,22 @@ function refreshSide() {
     el('div', { class: 'mgrid' }, groups),
     el('div', { class: 'mfoot' }, el('span', { class: 'xpline' }, streak + '-day streak · ', el('b', { text: store.xp + ' XP' })), themeBtn(), install()));
 }
-document.getElementById('scrim').addEventListener('click', () => setMenu(false));
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('menu-open')) { setMenu(false); const b = topEl.querySelector('[aria-controls=side]:not([hidden])'); if (b) b.focus(); } });
+function dismissMenu() {
+  setMenu(false);
+  const trigger = menuOpener && menuOpener.getClientRects().length ? menuOpener :
+    Array.from(topEl.querySelectorAll('[aria-controls=side]')).find(b => b.getClientRects().length);
+  if (trigger) trigger.focus();
+}
+document.querySelector('.skip').addEventListener('click', e => {
+  e.preventDefault();
+  document.getElementById('app').focus();
+});
+side.addEventListener('click', e => {
+  const link = e.target.closest('a');
+  if (link && link.hash === location.hash) { setMenu(false); document.getElementById('app').focus(); }
+});
+document.getElementById('scrim').addEventListener('click', dismissMenu);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('menu-open')) { dismissMenu(); } });
 document.addEventListener('click', e => { if (document.body.classList.contains('menu-open') && !side.contains(e.target) && !topEl.contains(e.target)) setMenu(false); });
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; refreshSide(); });
 
