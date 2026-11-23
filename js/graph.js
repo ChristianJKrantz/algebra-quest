@@ -5,24 +5,27 @@ const AQ = root.AQ = root.AQ || {};
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const f2 = n => (Math.round(n * 100) / 100).toString();
 
-/* o: {w,h,xmin,xmax,ymin,ymax,step,lab, curves:[{f|pts,cls,dash,from,to}], points:[{x,y,label,cls,open,dx,dy}],
+/* o: {w,h,xmin,xmax,ymin,ymax,step,lab,xStep,xLab,leftMargin, curves:[{f|pts,cls,dash,from,to}], points:[{x,y,label,cls,open,dx,dy}],
        vlines:[{x,cls}], hlines:[{y,cls}], segs:[[x1,y1,x2,y2,cls]], label:'aria text'} */
 function plot(o) {
   const W = o.w || 420, Hh = o.h || 320, m = 24;
   const { xmin, xmax, ymin, ymax } = o;
-  const X = x => m + (x - xmin) / (xmax - xmin) * (W - 2 * m);
+  const left = o.leftMargin || m;
+  const X = x => left + (x - xmin) / (xmax - xmin) * (W - left - m);
   const Y = y => Hh - m - (y - ymin) / (ymax - ymin) * (Hh - 2 * m);
   const step = o.step || 1, lab = o.lab || step;
+  const xStep = o.xStep || step, xLab = o.xLab || o.xStep || lab;
+  const xLabelY = Math.min(Hh - 6, Math.max(m + 10, Y(Math.min(ymax, Math.max(ymin, 0))) + 12));
   let s = `<svg class="plot" viewBox="0 0 ${W} ${Hh}" role="img" aria-label="${esc(o.label || 'graph')}" xmlns="http://www.w3.org/2000/svg">`;
   s += `<rect class="pbg" x="0" y="0" width="${W}" height="${Hh}" rx="10"/>`;
-  for (let x = Math.ceil(xmin / step) * step; x <= xmax + 1e-9; x += step) s += `<line class="grid${Math.abs(x) < 1e-9 ? ' axis' : ''}" x1="${f2(X(x))}" y1="${m}" x2="${f2(X(x))}" y2="${Hh - m}"/>`;
-  for (let y = Math.ceil(ymin / step) * step; y <= ymax + 1e-9; y += step) s += `<line class="grid${Math.abs(y) < 1e-9 ? ' axis' : ''}" x1="${m}" y1="${f2(Y(y))}" x2="${W - m}" y2="${f2(Y(y))}"/>`;
+  for (let x = Math.ceil(xmin / xStep) * xStep; x <= xmax + 1e-9; x += xStep) s += `<line class="grid${Math.abs(x) < 1e-9 ? ' axis' : ''}" x1="${f2(X(x))}" y1="${m}" x2="${f2(X(x))}" y2="${Hh - m}"/>`;
+  for (let y = Math.ceil(ymin / step) * step; y <= ymax + 1e-9; y += step) s += `<line class="grid${Math.abs(y) < 1e-9 ? ' axis' : ''}" x1="${left}" y1="${f2(Y(y))}" x2="${W - m}" y2="${f2(Y(y))}"/>`;
   if (xmin <= 0 && xmax >= 0) s += `<line class="axis" x1="${f2(X(0))}" y1="${m}" x2="${f2(X(0))}" y2="${Hh - m}"/>`;
-  if (ymin <= 0 && ymax >= 0) s += `<line class="axis" x1="${m}" y1="${f2(Y(0))}" x2="${W - m}" y2="${f2(Y(0))}"/>`;
-  for (let x = Math.ceil(xmin / lab) * lab; x <= xmax + 1e-9; x += lab) if (Math.abs(x) > 1e-9) s += `<text class="tick" x="${f2(X(x))}" y="${f2(Math.min(Hh - 6, Math.max(m + 10, Y(0) + 12)))}" text-anchor="middle">${f2(x)}</text>`;
-  for (let y = Math.ceil(ymin / lab) * lab; y <= ymax + 1e-9; y += lab) if (Math.abs(y) > 1e-9) s += `<text class="tick" x="${f2(Math.min(W - 4, Math.max(m - 4, X(0) - 5)))}" y="${f2(Y(y) + 3)}" text-anchor="end">${f2(y)}</text>`;
+  if (ymin <= 0 && ymax >= 0) s += `<line class="axis" x1="${left}" y1="${f2(Y(0))}" x2="${W - m}" y2="${f2(Y(0))}"/>`;
+  for (let x = Math.ceil(xmin / xLab) * xLab; x <= xmax + 1e-9; x += xLab) if (Math.abs(x) > 1e-9) s += `<text class="tick" x="${f2(X(x))}" y="${f2(xLabelY)}" text-anchor="middle">${f2(x)}</text>`;
+  for (let y = Math.ceil(ymin / lab) * lab; y <= ymax + 1e-9; y += lab) if (Math.abs(y) > 1e-9) s += `<text class="tick" x="${f2(Math.min(W - 4, Math.max(left - 4, X(0) - 5)))}" y="${f2(Y(y) + 3)}" text-anchor="end">${f2(y)}</text>`;
   (o.vlines || []).forEach(v => { s += `<line class="${v.cls || 'asym'}" x1="${f2(X(v.x))}" y1="${m}" x2="${f2(X(v.x))}" y2="${Hh - m}"/>`; });
-  (o.hlines || []).forEach(v => { s += `<line class="${v.cls || 'asym'}" x1="${m}" y1="${f2(Y(v.y))}" x2="${W - m}" y2="${f2(Y(v.y))}"/>`; });
+  (o.hlines || []).forEach(v => { s += `<line class="${v.cls || 'asym'}" x1="${left}" y1="${f2(Y(v.y))}" x2="${W - m}" y2="${f2(Y(v.y))}"/>`; });
   (o.segs || []).forEach(g => { s += `<line class="curve ${g[4] || 'c-a'}" x1="${f2(X(g[0]))}" y1="${f2(Y(g[1]))}" x2="${f2(X(g[2]))}" y2="${f2(Y(g[3]))}"/>`; });
   (o.curves || []).forEach(c => {
     let pts = c.pts;
@@ -31,11 +34,14 @@ function plot(o) {
       for (let i = 0; i <= N; i++) { const x = a + (b - a) * i / N; let y; try { y = c.f(x); } catch (e) { y = NaN; } pts.push(Number.isFinite(y) ? [x, y] : null); }
     }
     let d = '', pen = false, last = null;
-    const jump = (ymax - ymin) * 1.6;
+    const span = ymax - ymin;
+    const jump = span * 1.6;
+    // Measure off-screen distance from the visible range, even when it excludes zero.
+    const limit = 5 * span + 50;
     pts.forEach(p => {
-      if (!p || p[1] > ymax * 6 + 50 || p[1] < ymin * 6 - 50) { pen = false; last = null; return; }
+      if (!p || !Number.isFinite(p[0]) || !Number.isFinite(p[1]) || p[1] > ymax + limit || p[1] < ymin - limit) { pen = false; last = null; return; }
       if (last && Math.abs(p[1] - last[1]) > jump) pen = false;
-      d += (pen ? 'L' : 'M') + f2(X(p[0])) + ' ' + f2(Y(Math.max(ymin - 2 * (ymax - ymin), Math.min(ymax + 2 * (ymax - ymin), p[1])))) + ' ';
+      d += (pen ? 'L' : 'M') + f2(X(p[0])) + ' ' + f2(Y(Math.max(ymin - 2 * span, Math.min(ymax + 2 * span, p[1])))) + ' ';
       pen = true; last = p;
     });
     s += `<path class="curve ${c.cls || 'c-a'}${c.dash ? ' dashed' : ''}" d="${d}"/>`;

@@ -2,7 +2,7 @@
    Pages are network-first and skip the browser's HTTP cache, so updates show up right away; fonts and icons
    (versioned URLs) are cache-first. Only this site's own files are handled. */
 const CACHE_PREFIX = 'algebra-quest-v';
-const CACHE = CACHE_PREFIX + '13';
+const CACHE = CACHE_PREFIX + '14';
 const FONTS = ['fraunces-latin-600-normal', 'fraunces-latin-600-italic', 'fraunces-latin-800-normal',
   'source-serif-4-latin-400-normal', 'source-serif-4-latin-400-italic', 'source-serif-4-latin-600-normal', 'source-serif-4-latin-700-normal',
   'inter-latin-400-normal', 'inter-latin-500-normal', 'inter-latin-600-normal', 'inter-latin-700-normal',

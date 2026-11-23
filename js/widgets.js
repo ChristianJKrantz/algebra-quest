@@ -163,7 +163,8 @@ W.growthLab = function (host) {
   const draw = v => {
     const r = v.r / 100, t = v.t, P = 1000, A = n => P * Math.pow(1 + r / n, n * t), Ac = P * Math.exp(r * t), simple = P * (1 + r * t);
     const ymax = Math.max(Ac, simple) * 1.04, ymin = P * 0.96, st = niceStep(ymax - ymin);
-    s.plot.innerHTML = plot({ xmin: 0, xmax: t, ymin, ymax, step: st, lab: st, w: 460, h: 300, label: 'growth of $1000 under different compounding', curves: [{ f: x => P * (1 + r * x), cls: 'c-t dashed', from: 0, to: t }, { f: x => P * Math.pow(1 + r, x), cls: 'c-a', from: 0, to: t }, { f: x => P * Math.pow(1 + r / 12, 12 * x), cls: 'c-w', from: 0, to: t }, { f: x => P * Math.exp(r * x), cls: 'c-b', from: 0, to: t }] });
+    const yearsStep = Math.max(1, niceStep(t));
+    s.plot.innerHTML = plot({ xmin: 0, xmax: t, ymin, ymax, step: st, lab: st, xStep: yearsStep, leftMargin: 48, w: 460, h: 300, label: 'Balance over time in years, starting from $1,000 under different compounding', curves: [{ f: x => P * (1 + r * x), cls: 'c-t dashed', from: 0, to: t }, { f: x => P * Math.pow(1 + r, x), cls: 'c-a', from: 0, to: t }, { f: x => P * Math.pow(1 + r / 12, 12 * x), cls: 'c-w', from: 0, to: t }, { f: x => P * Math.exp(r * x), cls: 'c-b', from: 0, to: t }] });
     const d = n => '$' + A(n).toFixed(2);
     s.out.innerHTML = H(`After ${t} years at ${v.r}%, starting from $1,000:<br><span class="key t">- -</span> simple interest (no compounding): <b>$${simple.toFixed(2)}</b><br><span class="key a">■</span> compounded annually: <b>${d(1)}</b><br>Quarterly: <b>${d(4)}</b> &nbsp; <span class="key w">■</span> Monthly: <b>${d(12)}</b><br><span class="key b">■</span> Continuously: <b>$${Ac.toFixed(2)}</b><br>More frequent compounding helps, but with diminishing returns.`);
   };
