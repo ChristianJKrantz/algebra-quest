@@ -207,6 +207,10 @@ function numCheck(expected, o = {}) {
   return str => {
     let v; try { v = readReal(str); } catch (e) { return NO(READ_FAIL); }
     if (Math.abs(v - expected) <= tol * (o.relative ? Math.max(1, Math.abs(expected)) : 1)) return OK();
+    if (o.roundedDecimal) {
+      const decimal = String(str).trim().match(/^[+-]?\d*\.(\d{3,})$/);
+      if (decimal && Math.abs(v - expected) <= 0.5 * 10 ** -decimal[1].length + Number.EPSILON * Math.abs(expected)) return OK();
+    }
     for (const b of (o.bad || [])) if (Math.abs(v - b.val) <= Math.max(tol, 1e-6)) return NO(b.msg);
     if (o.nudge) { const m = o.nudge(v); if (m) return NO(m); }
     return NO('Not quite. Check your arithmetic and try again.');

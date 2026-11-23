@@ -494,3 +494,5 @@ table.synth tr.rule td.kcell{border-top:0}
 .missed-topics{border-block:3px double var(--line2)}.tocch .cn{font-style:italic}
 @media(max-width:600px){.hero{gap:16px}.hero>div:first-child{padding:23px 19px}.hero .sub{font-size:17px}.hero h1{margin-bottom:10px}.hero .cta{gap:6px}.hero .cta .btn{min-height:44px}.pcard{padding:15px}}
 }
+
+.recall-draft,.recall-comparison{margin:1rem 0;padding:12px 16px;background:var(--paper2);border:1px solid var(--line2);border-radius:4px}.recall-draft summary{cursor:pointer;font:600 15px var(--ui)}.recall-draft textarea{box-sizing:border-box;width:100%;margin-top:10px;padding:10px;background:var(--card);color:var(--ink);font:16px var(--serif)}.recall-comparison{white-space:pre-wrap;overflow-wrap:anywhere}

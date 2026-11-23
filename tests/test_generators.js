@@ -54,3 +54,9 @@ for (const id of Object.keys(AQ.gens)) {
 }
 console.log(`${Object.keys(AQ.gens).length} generators, ${total} problems, ${fails} failures`);
 process.exit(fails ? 1 : 0);
+
+const assert = require('node:assert/strict');
+const thirds = AQ.numCheck(1 / 3, { roundedDecimal: true });
+for (const answer of ['1/3', '.333', '0.3333']) assert.ok(thirds(answer).ok, answer);
+for (const answer of ['.33', '.334', '.3330', '332/1000']) assert.ok(!thirds(answer).ok, answer);
+assert.ok(!AQ.numCheck(1 / 3)('.333').ok);

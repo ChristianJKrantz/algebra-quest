@@ -35,10 +35,10 @@ G['linear-eq'] = function () {
     if (x0.d > 6 || Math.abs(x0.n) > 40) continue;
     return {
       prompt: `Solve for x: ~${a}(${xp('x', b)}) ${sgn(c)} = ${e} - ${d}(${xp('x', f)})~`,
-      fields: one('x =', AQ.numCheck(fval(x0)), '~x = ' + fq(x0) + '~', 'a number or fraction, like 3/4'),
-      hints: ['Start by distributing on both sides. Watch the sign when you distribute the minus on the right.',
+      fields: one('x =', AQ.numCheck(fval(x0), { roundedDecimal: true }), '~x = ' + fq(x0) + '~', 'fraction or decimal (round to 3+ places)'),
+      hints: [`Expand each parenthesis. On the right, multiply both terms inside by −${d}. What sign does the constant have?`,
         'Combine like terms on each side separately before you move anything across the equals sign.',
-        'Get every x term on one side and every plain number on the other, then divide by the coefficient of x.'],
+        `Add ${d}x to both sides. Once you have the x terms together, which coefficient will you divide by?`],
       solution: [`Distribute: ~${poly([a, a * b + c])} = ${e - d * f} - ${d}x~`,
         `Add ~${d}x~ to both sides and subtract ~${a * b + c}~: ~${s}x = ${k}~`,
         `Divide by ${s}: ~x = ${fq(x0)}~`]
@@ -567,7 +567,7 @@ G['fn-arith'] = function () {
       return { prompt: `Let ~f(x) = ${lin(f[0], f[1])}~ and ~g(x) = ${poly(gq)}~. Find ~(fg)(${k})~.`, fields: one('(fg)(' + k + ') =', AQ.numCheck(val), '~' + val + '~', 'a number'),
         hints: ['(fg)(k) means f(k) times g(k).', 'Evaluate each function separately at ' + k + ' (use parentheses for negatives).', 'Then multiply the two results.'], solution: [`~f(${k}) = ${f[0] * k + f[1]}~`, `~g(${k}) = ${gq[0] * k * k + gq[1] * k + gq[2]}~`, `Multiply: ~${val}~`] }; }
     if (v === 2) { const gv = gq[0] * k * k + gq[1] * k + gq[2]; if (gv === 0) continue; const fv = f[0] * k + f[1], q = Fr(fv, gv);
-      return { prompt: `Let ~f(x) = ${lin(f[0], f[1])}~ and ~g(x) = ${poly(gq)}~. Find ~({f|g})(${k})~.`, fields: one('(f/g)(' + k + ') =', AQ.numCheck(fval(q)), '~' + fq(q) + '~', 'a number or fraction'),
+      return { prompt: `Let ~f(x) = ${lin(f[0], f[1])}~ and ~g(x) = ${poly(gq)}~. Find ~({f|g})(${k})~.`, fields: one('(f/g)(' + k + ') =', AQ.numCheck(fval(q), { roundedDecimal: true }), '~' + fq(q) + '~', 'fraction or decimal (round to 3+ places)'),
         hints: ['(f/g)(k) means f(k) divided by g(k).', 'Evaluate the top and bottom separately.', 'Simplify the fraction.'], solution: [`~f(${k}) = ${fv}~`, `~g(${k}) = ${gv}~`, `~${fq(q)}~`] }; }
     const r = gq.slice(); r[1] += f[0]; r[2] += f[1];
     return { prompt: `Let ~f(x) = ${lin(f[0], f[1])}~ and ~g(x) = ${poly(gq)}~. Find ~(f + g)(x)~.`, fields: one('(f + g)(x) =', AQ.exprCheck(x => f[0] * x + f[1] + gq[0] * x * x + gq[1] * x + gq[2]), '~' + poly(r) + '~', 'like x^2 + 3x - 1'),

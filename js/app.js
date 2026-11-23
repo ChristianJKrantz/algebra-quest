@@ -232,6 +232,12 @@ function mathKeys() {
   tog.addEventListener('click', () => { row.hidden = !row.hidden; });
   return el('div', null, tog, row, el('div', { class: 'note', text: 'Type fractions as 3/4, powers as x^2, roots as sqrt(5), infinity as inf, and separate several answers with commas.' }));
 }
+function workedValue(field) {
+  const answer = String(field.answer);
+  const left = field.label.match(/([A-Za-z][\w]*(?:\([^)]*\))?)\s*=\s*$/);
+  const prefix = answer.match(/^(~?)([^~=]+?)\s*=\s*/);
+  return left && prefix && left[1] === prefix[2].trim() ? prefix[1] + answer.slice(prefix[0].length) : answer;
+}
 function renderProblem(host, p, o) {
   host.replaceChildren();
   let attempts = 0, hintsUsed = 0, finished = false, solvedReported = false;
@@ -274,7 +280,7 @@ function renderProblem(host, p, o) {
   if (hasText) form.append(mathKeys());
   const feed = el('div', { class: 'feed', role: 'status', 'aria-live': 'polite' }), hintsBox = el('div', { class: 'hints' }), solBox = el('div', { class: 'sol', hidden: true }), nextBox = el('div', { class: 'pnext' });
   const checkBtn = el('button', { class: 'btn primary', type: 'submit', text: 'Check answer' });
-  const hintBtn = el('button', { class: 'btn', type: 'button', text: 'Hint (0/' + p.hints.length + ')' });
+  const hintBtn = el('button', { class: 'btn', type: 'button', text: 'Get a hint' });
   const showBtn = el('button', { class: 'btn ghost', type: 'button', text: 'Show the worked answer' });
   form.append(el('div', { class: 'pactions' }, checkBtn, hintBtn, showBtn));
   const say = (cls, html) => { feed.className = 'feed ' + cls; feed.innerHTML = html; };
@@ -307,12 +313,13 @@ function renderProblem(host, p, o) {
   hintBtn.addEventListener('click', () => {
     if (hintsUsed >= p.hints.length) return;
     hintsBox.append(el('div', { class: 'hint', html: '<b>Hint ' + (hintsUsed + 1) + ':</b> ' + H(p.hints[hintsUsed]) })); hintsUsed++;
-    hintBtn.textContent = 'Hint (' + hintsUsed + '/' + p.hints.length + ')'; if (hintsUsed >= p.hints.length) hintBtn.disabled = true;
+    hintBtn.textContent = hintsUsed < p.hints.length ? 'Next hint (' + hintsUsed + '/' + p.hints.length + ')' : 'All hints shown';
+    hintsBox.lastElementChild.scrollIntoView({ block: 'nearest' }); if (hintsUsed >= p.hints.length) hintBtn.disabled = true;
   });
   showBtn.addEventListener('click', () => {
     if (finished) return; lock();
     solBox.hidden = false;
-    solBox.append(el('h4', { text: 'Worked answer' }), ...p.fields.map(f => el('div', { class: 'ans', html: '<b>' + AQ.escHtml(f.label) + '</b> ' + H(String(f.answer)) })), el('ol', { html: p.solution.map(s => '<li>' + H(s) + '</li>').join('') }));
+    solBox.append(el('h4', { text: 'Worked answer' }), ...p.fields.map(f => el('div', { class: 'ans', html: '<b>' + AQ.escHtml(f.label) + '</b> ' + H(workedValue(f)) })), el('ol', { html: p.solution.map(s => '<li>' + H(s) + '</li>').join('') }));
     say('info', 'Study each step, then try the next problem without looking. Revealed answers don’t count toward stars.');
     report({ firstTry: false, revealed: true, attempts, hintsUsed, xp: 0 }); nextBox.append(goNext);
   });
@@ -353,6 +360,7 @@ document.addEventListener('keydown', e => { if (keyHandler && !e.altKey && !e.ct
 function runCards(host, list, o) {
   o = o || {};
   const queue = list.slice(), tally = { 1: 0, 2: 0, 3: 0 }, total = list.length; let doneCount = 0, cur = null, flipped = false;
+  const firstRatings = new Map();
   const wrap = el('div', { class: 'fcwrap' }); host.append(wrap);
   const draw = () => {
     if (!queue.length) return finish();
@@ -368,24 +376,31 @@ function runCards(host, list, o) {
       el('button', { class: 'rate r1', type: 'button', 'data-r': '1', html: 'Forgot <small>see it again soon</small>' }),
       el('button', { class: 'rate r2', type: 'button', 'data-r': '2', html: 'Shaky <small>back tomorrow</small>' }),
       el('button', { class: 'rate r3', type: 'button', 'data-r': '3', html: 'Knew it <small>back in ' + GAP[Math.min(6, st.b === 0 ? 2 : st.b + 1)] + ' days</small>' }));
-    const flip = () => { if (flipped) return; flipped = true; fc.classList.add('flipped'); back.removeAttribute('aria-hidden'); front.setAttribute('aria-hidden', 'true'); flipBtn.hidden = true; rates.hidden = false; rates.querySelector('.r3').focus({ preventScroll: true }); };
-    const rate = r => { if (!flipped) return; tally[r]++; rateCard(cur.id, r); if (r === 1) queue.push(cur); else doneCount++; draw(); };
+    const recall = el('textarea', { rows: 2, placeholder: 'Write what you remember', 'aria-label': 'Your recall answer' });
+    const draft = el('details', { class: 'recall-draft' }, el('summary', { text: 'Write an answer before flipping' }), recall);
+    const comparison = el('div', { class: 'recall-comparison', hidden: true });
+    const flip = () => { if (flipped) return;
+      draft.hidden = true;
+      if (recall.value.trim()) { comparison.textContent = 'Your answer: ' + recall.value.trim(); comparison.hidden = false; }
+ flipped = true; fc.classList.add('flipped'); back.removeAttribute('aria-hidden'); front.setAttribute('aria-hidden', 'true'); flipBtn.hidden = true; rates.hidden = false; rates.querySelector('.r3').focus({ preventScroll: true }); };
+    const rate = r => { if (!flipped) return; if (!firstRatings.has(cur.id)) firstRatings.set(cur.id, r); tally[r]++; rateCard(cur.id, r); if (r === 1) queue.push(cur); else doneCount++; draw(); };
     flipBtn.addEventListener('click', flip); fc.addEventListener('click', flip);
     rates.addEventListener('click', e => { const b = e.target.closest('[data-r]'); if (b) rate(+b.dataset.r); });
     keyHandler = e => { if ((e.key === ' ' || e.key === 'Enter') && !flipped) { e.preventDefault(); flip(); } else if (flipped && /^[123]$/.test(e.key)) { e.preventDefault(); rate(+e.key); } };
     wrap.replaceChildren(el('div', { class: 'fcbar' }, el('span', { text: doneCount + ' / ' + total + ' done' }), el('div', { class: 'bar', style: '--c:' + CH_COLOR[ch] }, meter), el('span', { text: queue.length ? plural(queue.length, 'card') + ' left' : 'last card' })),
-      fc, el('div', { class: 'fcact' }, flipBtn), rates,
+      fc, draft, comparison, el('div', { class: 'fcact' }, flipBtn), rates,
       el('div', { class: 'fchelp', html: 'Answer out loud or on paper <b>before</b> you flip. Be honest when you rate: it decides when the card comes back. Keys: <kbd>Space</kbd> flip, <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> rate.' }));
     flipBtn.focus({ preventScroll: true });
   };
   const finish = () => {
     keyHandler = null;
+    const firstRecall = [...firstRatings.values()].filter(r => r === 3).length;
     const next = list.map(c => cs(c.id).d).filter(d => d > Date.now()).sort((a, b) => a - b)[0];
     const box = el('div', { class: 'boxes', 'aria-label': 'cards per memory box' });
     const counts = [1, 2, 3, 4, 5, 6].map(b => list.filter(c => cs(c.id).b === b).length), mx = Math.max(1, ...counts);
     counts.forEach((n, i) => { const bar = el('i'); bar.style.height = Math.max(3, Math.round(64 * n / mx)) + 'px'; box.append(el('div', null, el('span', { text: String(n) }), bar, el('span', { text: 'Box ' + (i + 1) }))); });
     wrap.replaceChildren(el('div', { class: 'result' },
-      el('div', { class: 'kicker', text: 'Deck finished' }), el('div', { class: 'big', text: tally[3] + ' / ' + total }), el('h2', { text: tally[3] === total ? 'Perfect recall.' : tally[3] >= total / 2 ? 'Solid. The shaky ones come back soon.' : 'Good start. Repetition does the work.' }),
+      el('div', { class: 'kicker', text: 'Deck finished' }), el('div', { class: 'big', text: firstRecall + ' / ' + total + ' on first recall' }), el('h2', { text: firstRecall === total ? 'Perfect recall.' : firstRecall >= total / 2 ? 'Solid. The shaky ones come back soon.' : 'Good start. Repetition does the work.' }),
       el('p', { class: 'sub', text: 'Knew it: ' + tally[3] + ' · Shaky: ' + tally[2] + ' · Forgot (then relearned): ' + tally[1] + '. ' + (next ? 'Your next review is ' + whenText(next) + '.' : '') }),
       el('div', { class: 'kicker', text: 'Where these cards live now' }), box,
       el('p', { class: 'note', text: 'Each “Knew it” moves a card up a box, and higher boxes wait longer before coming back (1, 3, 7, 16, 35, 60 days). That spacing is what moves facts into long-term memory.' }),

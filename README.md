@@ -2,6 +2,10 @@
 
 # Algebra Quest
 
+## About
+
+Practice college algebra with lessons, graphs, flashcards and worked examples. On fields marked **fraction or decimal**, enter an exact fraction or a decimal rounded to at least three places. For example, both `1/3` and `.333` are accepted for one third. Explicit rounding and exact-form problems follow their own prompts.
+
 **An interactive college algebra workbook.** Lessons that teach the method, hints that never give the answer, and flashcards that make it stick.
 
 The burgundy-and-gold cover opens to today’s assignment. Inside, every page is a sheet of paper with a running head, numbered sections, worked examples, key-rule boxes and notes in the margin. Four chapters of college algebra, split into 27 short sections (quests). Each quest takes you through three steps: **learn** the idea from a short lesson, worked examples and interactive graph labs; **remember** it with spaced-repetition flashcards; then **use** it on endless, randomly generated practice problems. A wrong answer gets feedback about the specific mistake, and hints point to the next step of the method without ever giving the answer. Open **Review → Topics to retry** to return to a missed topic, even if you left the problem unfinished. A fresh first-try solve clears it from the list. The open-book icon identifies the installed workbook.
@@ -13,6 +17,8 @@ Works in any modern browser on desktop, tablet or phone. No install, no account,
 ![The Algebra Quest workbook cover and today’s assignment](docs/desktop.jpg)
 
 ---
+
+On flashcards, expand **Write an answer before flipping** to compare your recall with the answer. The deck summary counts first recalls separately from later attempts. During practice, **Get a hint** reveals one step at a time.
 
 ## What's inside
 

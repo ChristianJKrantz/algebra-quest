@@ -179,7 +179,7 @@ G['rational-features'] = function () {
         { key: 'va', label: 'Vertical asymptote(s)  x =', check: AQ.setCheck([r, s]), answer: '~x = ' + r + '~, ~x = ' + s + '~', ph: 'comma separated' },
         { key: 'ha', label: 'Horizontal asymptote  y =', check: AQ.numCheck(a), answer: '~y = ' + a + '~', ph: 'a number' },
         { key: 'xi', label: 'x-intercept(s)', check: AQ.setCheck([p, q]), answer: '~x = ' + p + '~, ~x = ' + q + '~', ph: 'comma separated' },
-        { key: 'yi', label: 'y-intercept', check: AQ.numCheck(fval(y0)), answer: '~' + fq(y0) + '~', ph: 'number or fraction' },
+        { key: 'yi', label: 'y-intercept', check: AQ.numCheck(fval(y0), { roundedDecimal: true }), answer: '~' + fq(y0) + '~', ph: 'fraction or decimal (round to 3+ places)' },
         { key: 'cr', label: 'The graph crosses its horizontal asymptote at x =', check: cross === null ? AQ.setCheck([]) : AQ.numCheck(cross, { tol: 1e-6 }), answer: cross === null ? 'it never crosses' : '~' + fq(Fr(r * s - p * q, (r + s) - (p + q))) + '~', ph: 'a number, or none' }
       ],
       hints: ['Factor the top and bottom. Vertical asymptotes come from the zeros of the DENOMINATOR; x-intercepts from the zeros of the NUMERATOR.', 'Same degree on top and bottom? The horizontal asymptote is the ratio of the leading coefficients.', 'y-intercept: plug in x = 0. To test crossing: set f(x) equal to the asymptote’s y-value and solve. A solution means it crosses there.'],
@@ -206,7 +206,7 @@ G['rational-asym'] = function () {
       const ha = Fr(a, d);
       return {
         prompt: `Find all asymptotes of ~f(x) = {${poly(num)}|${poly(den)}}~.`,
-        fields: [{ key: 'v', label: 'Vertical asymptote(s)  x =', check: AQ.setCheck([r, s]), answer: '~x = ' + r + '~, ~x = ' + s + '~', ph: 'comma separated' }, { key: 'o', label: 'Horizontal asymptote  y =', check: AQ.numCheck(fval(ha)), answer: '~y = ' + fq(ha) + '~', ph: 'number or fraction' }],
+        fields: [{ key: 'v', label: 'Vertical asymptote(s)  x =', check: AQ.setCheck([r, s]), answer: '~x = ' + r + '~, ~x = ' + s + '~', ph: 'comma separated' }, { key: 'o', label: 'Horizontal asymptote  y =', check: AQ.numCheck(fval(ha), { roundedDecimal: true }), answer: '~y = ' + fq(ha) + '~', ph: 'fraction or decimal (round to 3+ places)' }],
         hints: ['Factor the denominator and set each factor to 0.', 'Compare the degrees of the top and bottom. They’re equal here.', 'When the degrees are equal, the horizontal asymptote is leading coefficient ÷ leading coefficient.'],
         solution: [`Denominator: ~${d === 1 ? '' : d}${factorStr(r)}${factorStr(s)}~`, `Vertical: ~x = ${r}, ${s}~`, `Horizontal: ~y = ${a}/${d} = ${fq(ha)}~`]
       };
@@ -274,7 +274,7 @@ G['exp-same-base'] = function () {
       const b = pick([2, 3, 5, 4, 10]), m = rnd(2, 5), p = nz(-5, 5), q = nz(-9, 9); if (b === 3 && p === -2 && q === 10 && m === 2) continue;
       if (Math.abs(Math.pow(b, m)) > 1e5) continue;
       const x = Fr(m - q, p); if (x.d > 5) continue;
-      return { prompt: `Solve: ~${b}^(${lin(p, q)}) = ${Math.pow(b, m)}~`, fields: one('x =', AQ.numCheck(fval(x)), '~x = ' + fq(x) + '~', 'a number or fraction'),
+      return { prompt: `Solve: ~${b}^(${lin(p, q)}) = ${Math.pow(b, m)}~`, fields: one('x =', AQ.numCheck(fval(x), { roundedDecimal: true }), '~x = ' + fq(x) + '~', 'fraction or decimal (round to 3+ places)'),
         hints: [`Write the right side as a power of ${b}.`, 'When the bases match, the exponents must be equal. Set them equal.', 'Solve the resulting linear equation.'], solution: [`~${Math.pow(b, m)} = ${b}^${m}~`, `~${lin(p, q)} = ${m}~`, `~x = ${fq(x)}~`] };
     }
     const bases = pick([[2, 4, 8, 16], [3, 9, 27, 81]]), u = rnd(1, 3), vv = rnd(1, 4), B1 = bases[u], B2 = bases[vv - 1 < bases.length ? vv - 1 : 0];
@@ -283,7 +283,7 @@ G['exp-same-base'] = function () {
     const e1 = Math.round(Math.log(b1) / Math.log(base0)), e2 = Math.round(Math.log(b2) / Math.log(base0));
     const p = nz(-4, 4), q = nz(-6, 6), x = Fr(e2 - e1 * q, e1 * p); void B1; void u; void vv;
     if (x.d > 5) continue;
-    return { prompt: `Solve: ~${b1}^(${lin(p, q)}) = ${b2}~`, fields: one('x =', AQ.numCheck(fval(x)), '~x = ' + fq(x) + '~', 'a number or fraction'),
+    return { prompt: `Solve: ~${b1}^(${lin(p, q)}) = ${b2}~`, fields: one('x =', AQ.numCheck(fval(x), { roundedDecimal: true }), '~x = ' + fq(x) + '~', 'fraction or decimal (round to 3+ places)'),
       hints: [`Both ${b1} and ${b2} are powers of ${base0}. Rewrite each one that way.`, 'Use (aᵐ)ⁿ = aᵐⁿ to combine exponents, then set the exponents equal.', 'Solve the linear equation that’s left.'], solution: [`~${b1} = ${base0}^${e1}~ and ~${b2} = ${base0}^${e2}~`, `~${e1}(${lin(p, q)}) = ${e2}~`, `~x = ${fq(x)}~`] };
   }
 };
@@ -413,7 +413,7 @@ G['log-eq-basic'] = function () {
     const x = Fr(Math.pow(b, k) - q, p); if (x.d > 5) continue;
     return {
       prompt: `Solve: ~log_${b}(${lin(p, q)}) = ${k}~`,
-      fields: one('x =', AQ.numCheck(fval(x)), '~x = ' + fq(x) + '~', 'a number or fraction'),
+      fields: one('x =', AQ.numCheck(fval(x), { roundedDecimal: true }), '~x = ' + fq(x) + '~', 'fraction or decimal (round to 3+ places)'),
       hints: ['Convert to exponential form: the base ' + b + ' raised to the log’s value equals the stuff inside.', 'Now solve the linear equation.', 'Check that what’s inside the log ends up positive.'],
       solution: [`Exponential form: ~${lin(p, q)} = ${b}^${k} = ${Math.pow(b, k)}~`, `~x = ${fq(x)}~`]
     };
@@ -427,7 +427,7 @@ G['log-eq-prop'] = function () {
       const x = Fr(b * c, a - b); if (x.d > 4) continue;
       return {
         prompt: `Solve: ~ln(${a}x) = ln(${b}) + ln(x + ${c})~`,
-        fields: one('x =', AQ.numCheck(fval(x)), '~x = ' + fq(x) + '~', 'a number or fraction'),
+        fields: one('x =', AQ.numCheck(fval(x), { roundedDecimal: true }), '~x = ' + fq(x) + '~', 'fraction or decimal (round to 3+ places)'),
         hints: ['Combine the right side into ONE log using the product rule.', 'If ln(A) = ln(B) then A = B. Drop the logs.', 'Solve, then check that every log argument is positive.'],
         solution: [`Product rule: ~ln(${a}x) = ln(${b}(x + ${c}))~`, `~${a}x = ${b}x + ${b * c}~`, `~x = ${fq(x)}~`]
       };
