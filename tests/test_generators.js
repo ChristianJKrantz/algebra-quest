@@ -53,7 +53,7 @@ for (const id of Object.keys(AQ.gens)) {
   }
 }
 console.log(`${Object.keys(AQ.gens).length} generators, ${total} problems, ${fails} failures`);
-process.exit(fails ? 1 : 0);
+process.exitCode = fails ? 1 : 0;
 
 const assert = require('node:assert/strict');
 const thirds = AQ.numCheck(1 / 3, { roundedDecimal: true });
