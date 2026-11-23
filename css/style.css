@@ -496,3 +496,55 @@ table.synth tr.rule td.kcell{border-top:0}
 }
 
 .recall-draft,.recall-comparison{margin:1rem 0;padding:12px 16px;background:var(--paper2);border:1px solid var(--line2);border-radius:4px}.recall-draft summary{cursor:pointer;font:600 15px var(--ui)}.recall-draft textarea{box-sizing:border-box;width:100%;margin-top:10px;padding:10px;background:var(--card);color:var(--ink);font:16px var(--serif)}.recall-comparison{white-space:pre-wrap;overflow-wrap:anywhere}
+
+/* ---------- practice calculator ---------- */
+.calculator {
+  width: min(28rem, calc(100% - 2rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 1rem;
+  border: 1px solid var(--line2);
+  border-radius: 1rem;
+  background: var(--card);
+  color: var(--ink);
+  font: 500 .875rem/1.4 var(--ui);
+  box-shadow: var(--page-shadow);
+}
+.calculator::backdrop { background: rgba(20, 16, 12, .55); }
+.calc-head { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: .5rem; }
+.calc-head h2 { margin: 0; font-size: 1.45rem; }
+.calculator input[type=text] {
+  display: block;
+  width: 100%;
+  margin-top: .25rem;
+  padding: .6rem;
+  border: 1px solid var(--line2);
+  border-radius: .5rem;
+  background: var(--paper);
+  color: var(--ink);
+  font: 1rem var(--mono);
+}
+.calculator .note { margin: .3rem 0; }
+.calc-result {
+  display: block;
+  min-height: 2.6rem;
+  padding: .48rem .65rem;
+  border-radius: .5rem;
+  background: var(--sunk);
+  color: var(--ink);
+  font: 700 1.1rem/1.4 var(--mono);
+  overflow-wrap: anywhere;
+}
+.calc-error { color: var(--bad); font: inherit; }
+.calc-decimal { display: flex; align-items: center; gap: .45rem; min-height: 2.75rem; }
+.calc-pad { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .25rem; }
+.calc-pad .btn { min-height: 2.75rem; padding: .25rem; justify-content: center; font: 600 1rem var(--mono); }
+@media (max-width: 600px) {
+  .calculator {
+    width: 100%;
+    max-width: 100%;
+    max-height: 94dvh;
+    margin: auto 0 0;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    border-radius: 1rem 1rem 0 0;
+  }
+}

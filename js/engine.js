@@ -96,7 +96,7 @@ function tokenize(src) {
     const ch = src[i];
     if (/\s/.test(ch)) { i++; continue; }
     let m = /^(\d+\.?\d*|\.\d+)/.exec(src.slice(i));
-    if (m) { toks.push({ t: 'num', v: parseFloat(m[1]) }); i += m[1].length; continue; }
+    if (m) { toks.push({ t: 'num', v: m[1] }); i += m[1].length; continue; }
     if (/[A-Za-z]/.test(ch)) {
       const rest = src.slice(i);
       const f = FN.find(f => rest.startsWith(f));
@@ -110,16 +110,21 @@ function tokenize(src) {
   return toks;
 }
 const cache = new Map();
-function compile(str) {
+const expressionOps = {
+  number: text => C(Number(text)),
+  '+': cadd, '-': csub, '*': cmul, '/': cdiv, '^': cpow,
+  negate: cneg, sqrt: csqrt
+};
+function compile(str, ops = expressionOps) {
   const key = String(str);
-  if (cache.has(key)) return cache.get(key);
+  if (ops === expressionOps && cache.has(key)) return cache.get(key);
   const toks = tokenize(normalize(key));
   let p = 0;
   const peek = (o = 0) => toks[p + o];
   const isOp = (t, v) => t && t.t === 'op' && t.v === v;
   let absDepth = 0;
   const startsAtom = t => t && (t.t === 'num' || t.t === 'id' || t.t === 'fn' || t.t === 'const' || isOp(t, '(') || (isOp(t, '|') && absDepth === 0));
-  const bin = (o, a, b) => env => { const x = a(env), y = b(env); return o === '+' ? cadd(x, y) : o === '-' ? csub(x, y) : o === '*' ? cmul(x, y) : cdiv(x, y); };
+  const bin = (o, a, b) => env => ops[o](a(env), b(env));
   function expr() { let n = termP(); while (peek() && (isOp(peek(), '+') || isOp(peek(), '-'))) { const o = toks[p++].v; n = bin(o, n, termP()); } return n; }
   function termP() {
     let n = unary();
@@ -132,13 +137,13 @@ function compile(str) {
     return n;
   }
   function unary() {
-    if (isOp(peek(), '-')) { p++; const u = unary(); return env => cneg(u(env)); }
+    if (isOp(peek(), '-')) { p++; const u = unary(); return env => ops.negate(u(env)); }
     if (isOp(peek(), '+')) { p++; return unary(); }
     return power();
   }
   function power() {
     const b = atom();
-    if (isOp(peek(), '^')) { p++; const e = unary(); return env => cpow(b(env), e(env)); }
+    if (isOp(peek(), '^')) { p++; const e = unary(); return bin('^', b, e); }
     return b;
   }
   function parenOrPower() {
@@ -148,7 +153,7 @@ function compile(str) {
   function atom() {
     const t = toks[p++];
     if (!t) throw new Error('end');
-    if (t.t === 'num') { const v = C(t.v); return () => v; }
+    if (t.t === 'num') { const v = ops.number(t.v); return () => v; }
     if (t.t === 'const') { const v = t.v === 'pi' ? C(Math.PI) : C(Infinity); return () => v; }
     if (t.t === 'id') {
       if (t.v === 'i') return env => (env && env.i !== undefined) ? env.i : C(0, 1);
@@ -172,7 +177,7 @@ function compile(str) {
         };
       }
       const arg = parenOrPower();
-      if (t.v === 'sqrt') return env => csqrt(arg(env));
+      if (t.v === 'sqrt') return env => ops.sqrt(arg(env));
       if (t.v === 'cbrt') return env => { const a = arg(env); return isReal(a) ? C(Math.cbrt(a.re)) : NaNc(); };
       if (t.v === 'abs') return env => { const a = arg(env); return C(Math.hypot(a.re, a.im)); };
       if (t.v === 'ln') return env => { const a = arg(env); return (isReal(a) && a.re > 0) ? C(Math.log(a.re)) : NaNc(); };
@@ -183,12 +188,74 @@ function compile(str) {
   }
   const f = expr();
   if (p < toks.length) throw new Error('extra');
-  cache.set(key, f);
+  if (ops === expressionOps) cache.set(key, f);
   return f;
 }
 function evalStr(str, env) { return compile(str)(env || {}); }
 function evalReal(str, env) { const v = evalStr(str, env); if (!isReal(v) || !Number.isFinite(v.re)) throw new Error('notreal'); return v.re; }
 function tryEval(str, env) { try { return evalStr(str, env); } catch (e) { return null; } }
+
+/* ---------------- calculator ---------------- */
+function rational(n, d = 1n) {
+  if (!d || n.toString().length > 250 || d.toString().length > 250) return null;
+  if (d < 0n) { n = -n; d = -d; }
+  let a = n < 0n ? -n : n, b = d;
+  while (b) [a, b] = [b, a % b];
+  return { n: n / a, d: d / a };
+}
+
+function carryExact(approximate, exact) {
+  return (a, b) => {
+    const fraction = a.fraction && b.fraction ? exact(a.fraction, b.fraction) : null;
+    const value = fraction ? C(Number(fraction.n) / Number(fraction.d)) : approximate(a, b);
+    return { ...value, fraction };
+  };
+}
+
+function integerSqrt(n) {
+  if (n < 2n) return n;
+  let root = 1n << BigInt(Math.ceil(n.toString(2).length / 2));
+  for (;;) {
+    const next = (root + n / root) / 2n;
+    if (next >= root) return root;
+    root = next;
+  }
+}
+
+const calculatorOps = {
+  number(text) {
+    const [whole, decimal = ''] = text.split('.');
+    return { ...C(Number(text)), fraction: rational(BigInt(whole + decimal), 10n ** BigInt(decimal.length)) };
+  },
+  '+': carryExact(cadd, (a, b) => rational(a.n * b.d + b.n * a.d, a.d * b.d)),
+  '-': carryExact(csub, (a, b) => rational(a.n * b.d - b.n * a.d, a.d * b.d)),
+  '*': carryExact(cmul, (a, b) => rational(a.n * b.n, a.d * b.d)),
+  '/': carryExact(cdiv, (a, b) => rational(a.n * b.d, a.d * b.n)),
+  '^': carryExact(cpow, (a, b) => {
+    if (b.d !== 1n || b.n < -64n || b.n > 64n) return null;
+    return b.n < 0n ? rational(a.d ** -b.n, a.n ** -b.n) : rational(a.n ** b.n, a.d ** b.n);
+  }),
+  negate: a => ({ ...cneg(a), fraction: a.fraction && { n: -a.fraction.n, d: a.fraction.d } }),
+  sqrt(a) {
+    const value = csqrt(a);
+    if (!a.fraction || a.fraction.n < 0n) return value;
+    const { n, d } = a.fraction;
+    const rn = integerSqrt(n), rd = integerSqrt(d);
+    if (rn * rn === n && rd * rd === d) value.fraction = { n: rn, d: rd };
+    return value;
+  }
+};
+
+function calculate(text) {
+  if (text.length > 160 || /[\d.]\s+[\d.]|\.\d*\./.test(text)) throw new Error('expression');
+  const value = compile(text, calculatorOps)(Object.create(null));
+  if (!isReal(value) || !Number.isFinite(value.re)) throw new Error('real result required');
+  const f = value.fraction;
+  return {
+    exact: f ? (f.d === 1n ? String(f.n) : f.n + '/' + f.d) : null,
+    decimal: String(Number(value.re.toPrecision(12)))
+  };
+}
 
 /* ---------------- answer checkers (each returns {ok,msg}) ---------------- */
 const OK = (msg = '') => ({ ok: true, msg });
@@ -463,7 +530,7 @@ Object.assign(AQ, {
   rnd, pick, nz, shuffle, gcd, Fr, fadd, fsub, fmul, fdiv, fval, fq, fa,
   poly, lin, sgn, paren, term, polyEval, synth, polyMul, fromRoots, factorStr,
   C, cadd, csub, cmul, cdiv, cneg, csqrt, ceq, isReal,
-  normalize, compile, evalStr, evalReal, tryEval,
+  normalize, compile, evalStr, evalReal, tryEval, calculate,
   eqCheck, simpRad, radStr, money, OK, NO, READ_FAIL, numCheck, setCheck, ptCheck, exprCheck, complexCheck, complexSetCheck,
   parseIntervals, ivCheck, ivStr, noneAllowedIv, choiceCheck, multiCheck, logFormCheck, expFormCheck, logAtomic, logCount,
   escHtml, pretty, H

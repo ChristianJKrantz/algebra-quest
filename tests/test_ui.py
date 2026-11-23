@@ -49,12 +49,37 @@ with sync_playwright() as p:
         pg.click('.switch')
         # answering: wrong then right with the generator's own answer
         pg.goto(f'{BASE}#/ch/1/c1-linear/practice'); pg.wait_for_selector('.pcard')
-        pg.fill('.fld input', 'zzz'); pg.click('text=Check answer'); pg.wait_for_selector('.feed.bad')
+        answer = pg.locator('.fld input').first
+        answer.fill('zzz')
+        calc_button = pg.get_by_role('button', name='Calculator', exact=True)
+        calc_button.click()
+        calc = pg.get_by_role('dialog', name='Calculator')
+        expression = calc.get_by_label('Expression')
+        result = calc.locator('output')
+        for key in ['1', 'Divide', '3', 'Calculate']:
+            calc.get_by_role('button', name=key, exact=True).click()
+        chk(result.inner_text() == '1/3', 'calculator lost exact fraction')
+        calc.get_by_label('Show decimal').check()
+        chk(result.inner_text() == '≈ 0.333333333333', 'calculator decimal result')
+        for formula, expected in [('sqrt(9/16)', '0.75'), ('(2/3)^-2', '2.25'), ('-2^2', '-4')]:
+            expression.fill(formula); expression.press('Enter')
+            chk(result.inner_text().removeprefix('≈ ') == expected, 'calculator result for ' + formula)
+        expression.fill('1/0'); expression.press('Enter')
+        chk(result.inner_text().startswith('Check the expression'), 'calculator accepted division by zero')
+        chk(calc.bounding_box()['width'] <= vw[0], 'calculator wider than viewport')
+        pg.keyboard.press('Escape'); calc.wait_for(state='hidden')
+        chk(answer.input_value() == 'zzz', 'calculator cleared the answer')
+        chk(calc_button.evaluate('el => document.activeElement === el'), 'calculator did not restore focus')
+        pg.click('text=Check answer'); pg.wait_for_selector('.feed.bad')
         # mixed review + boss
         pg.goto(f'{BASE}#/review/mix'); pg.wait_for_selector('.pcard')
+        calc_button.click()
+        calc.get_by_role('button', name='Close').click()
+        calc.wait_for(state='hidden')
         for _ in range(8): pg.click('text=Show the worked answer'); pg.click('.pnext .btn')
         pg.wait_for_selector('.result')
         pg.goto(f'{BASE}#/ch/2/boss'); pg.wait_for_selector('.pcard')
+        chk(calc_button.count() == 0, 'calculator available in chapter challenge')
         for _ in range(10): pg.click('text=Show the worked answer'); pg.click('.pnext .btn')
         pg.wait_for_selector('.result')
         # theme toggle, review, progress

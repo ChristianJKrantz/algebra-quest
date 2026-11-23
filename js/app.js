@@ -238,6 +238,62 @@ function workedValue(field) {
   const prefix = answer.match(/^(~?)([^~=]+?)\s*=\s*/);
   return left && prefix && left[1] === prefix[2].trim() ? prefix[1] + answer.slice(prefix[0].length) : answer;
 }
+function calculatorDialog() {
+  const title = uid(), help = uid(), inputId = uid();
+  const input = el('input', {
+    id: inputId, type: 'text', maxlength: '160', autocomplete: 'off', spellcheck: 'false',
+    autocapitalize: 'off', 'aria-describedby': help, placeholder: '(1/3 + 1/6)^2'
+  });
+  const output = el('output', { class: 'calc-result', 'aria-live': 'polite', for: inputId });
+  const decimal = el('input', { type: 'checkbox' });
+  const close = el('button', { class: 'btn', type: 'button', autofocus: true, text: 'Close' });
+  let result = null;
+  const display = () => {
+    output.textContent = result ? (result.exact && !decimal.checked
+      ? result.exact : (result.exact === result.decimal ? '' : '≈ ') + result.decimal) : '';
+    output.classList.remove('calc-error');
+  };
+  const onEdit = () => { result = null; display(); };
+  const solve = e => {
+    e.preventDefault();
+    if (!input.value.trim()) return;
+    try {
+      result = AQ.calculate(input.value);
+      display();
+    } catch {
+      onEdit();
+      output.classList.add('calc-error');
+      output.textContent = 'Check the expression. Use numbers, matching parentheses, and operations with a finite real result.';
+    }
+  };
+  const keys = [
+    ['(', '('], [')', ')'], ['^', '^', 'Power'], ['√', 'sqrt(', 'Square root'], ['C', '', 'Clear'],
+    ['7', '7'], ['8', '8'], ['9', '9'], ['÷', '/', 'Divide'], ['⌫', null, 'Backspace'],
+    ['4', '4'], ['5', '5'], ['6', '6'], ['×', '*', 'Multiply'], ['π', 'π', 'Pi'],
+    ['1', '1'], ['2', '2'], ['3', '3'], ['−', '-', 'Minus'], ['log', 'log(', 'Log base 10'],
+    ['0', '0'], ['.', '.', 'Decimal point'], ['ln', 'ln(', 'Natural log'], ['+', '+', 'Add']
+  ];
+  const pad = el('div', { class: 'calc-pad' }, keys.map(([label, value, name]) =>
+    el('button', { class: 'btn', type: 'button', 'aria-label': name, text: label, onclick: () => {
+      const start = input.selectionStart, end = input.selectionEnd;
+      if (value === '') input.value = '';
+      else if (value === null) input.setRangeText('', start === end ? Math.max(0, start - 1) : start, end, 'end');
+      else if (input.value.length - (end - start) + value.length <= input.maxLength) input.setRangeText(value, start, end, 'end');
+      onEdit();
+    } })
+  ), el('button', { class: 'btn primary', type: 'submit', 'aria-label': 'Calculate', text: '=' }));
+  input.addEventListener('input', onEdit);
+  decimal.addEventListener('change', () => { if (result) display(); });
+  const dialog = el('dialog', { class: 'calculator', 'aria-labelledby': title },
+    el('div', { class: 'calc-head' }, el('h2', { id: title, text: 'Calculator' }), close),
+    el('form', { onsubmit: solve },
+      el('label', { for: inputId, text: 'Expression' }), input,
+      el('p', { id: help, class: 'note', text: 'Use / for fractions and ^ for powers.' }),
+      output, el('label', { class: 'calc-decimal' }, decimal, ' Show decimal'), pad));
+  close.addEventListener('click', () => dialog.close());
+  return dialog;
+}
+
 function renderProblem(host, p, o) {
   host.replaceChildren();
   let attempts = 0, hintsUsed = 0, finished = false, solvedReported = false;
@@ -282,9 +338,11 @@ function renderProblem(host, p, o) {
   const checkBtn = el('button', { class: 'btn primary', type: 'submit', text: 'Check answer' });
   const hintBtn = el('button', { class: 'btn', type: 'button', text: 'Get a hint' });
   const showBtn = el('button', { class: 'btn ghost', type: 'button', text: 'Show the worked answer' });
-  form.append(el('div', { class: 'pactions' }, checkBtn, hintBtn, showBtn));
+  const calculator = o.calculator ? calculatorDialog() : null;
+  const calcBtn = calculator && el('button', { class: 'btn', type: 'button', 'aria-haspopup': 'dialog', text: 'Calculator', onclick: () => calculator.showModal() });
+  form.append(el('div', { class: 'pactions' }, checkBtn, hintBtn, calcBtn, showBtn));
   const say = (cls, html) => { feed.className = 'feed ' + cls; feed.innerHTML = html; };
-  const lock = () => { finished = true; checkBtn.disabled = hintBtn.disabled = showBtn.disabled = true; card.querySelectorAll('input').forEach(i => { i.disabled = true; }); card.querySelectorAll('.pillbtn').forEach(b => { b.disabled = true; }); };
+  const lock = () => { finished = true; checkBtn.disabled = hintBtn.disabled = showBtn.disabled = true; form.querySelectorAll('input').forEach(i => { i.disabled = true; }); card.querySelectorAll('.pillbtn').forEach(b => { b.disabled = true; }); };
   const goNext = el('button', { class: 'btn hot', type: 'button', text: o.nextLabel || 'Next problem →' });
   goNext.addEventListener('click', () => o.onNext && o.onNext());
   const report = r => { if (solvedReported) return; solvedReported = true; o.onSolved && o.onSolved(r); };
@@ -323,7 +381,9 @@ function renderProblem(host, p, o) {
     say('info', 'Study each step, then try the next problem without looking. Revealed answers don’t count toward stars.');
     report({ firstTry: false, revealed: true, attempts, hintsUsed, xp: 0 }); nextBox.append(goNext);
   });
-  card.append(form, hintsBox, feed, solBox, nextBox); host.append(card);
+  card.append(form, hintsBox, feed, solBox, nextBox);
+  if (calculator) card.append(calculator);
+  host.append(card);
   if (firstInput && o.autofocus !== false && !matchMedia('(pointer: coarse)').matches) firstInput.focus({ preventScroll: true });
 }
 function recordProblem(tid, r) {
@@ -346,7 +406,7 @@ function runPractice(host, topic) {
   const nextProblem = () => {
     let p; for (let i = 0; i < 6; i++) { p = makeProblem(topic.practice); if (p.prompt !== last) break; } last = p.prompt;
     renderProblem(stage, p, {
-      topicId: topic.id, label: 'Problem ' + (sess.solved + 1), right: topic.title,
+      topicId: topic.id, calculator: true, label: 'Problem ' + (sess.solved + 1), right: topic.title,
       onSolved: r => { if (r.firstTry) { sess.first++; sess.streak++; } else sess.streak = 0; sess.solved++; store.best = Math.max(store.best, sess.streak); recordProblem(topic.id, r); upd(); },
       onNext: () => { nextProblem(); stage.scrollIntoView({ block: 'nearest' }); }
     });
@@ -417,7 +477,7 @@ function runSet(host, items, o) {
     if (idx >= items.length) return o.finish(results, stage);
     const it = items[idx]; let p; try { p = gens[it.gid](); } catch (e) { p = makeProblem(topicIndex[it.tid].practice); }
     renderProblem(stage, p, {
-      topicId: it.tid, label: o.label + ' ' + (idx + 1) + ' of ' + items.length, right: topicIndex[it.tid].title, nextLabel: idx === items.length - 1 ? 'See my results →' : 'Next →',
+      topicId: it.tid, calculator: o.calculator, label: o.label + ' ' + (idx + 1) + ' of ' + items.length, right: topicIndex[it.tid].title, nextLabel: idx === items.length - 1 ? 'See my results →' : 'Next →',
       onSolved: r => { results[idx] = { tid: it.tid, firstTry: r.firstTry, revealed: r.revealed }; recordProblem(it.tid, r); }, onNext: () => { idx++; step(); window.scrollTo(0, 0); }
     });
   };
@@ -456,7 +516,7 @@ function runMix(host) {
     items.push({ tid, gid: pick(topicIndex[tid].practice) }); prevT = tid;
   }
   runSet(host, items, {
-    label: 'Review', finish: (results, stage) => {
+    label: 'Review', calculator: true, finish: (results, stage) => {
       store.mixDay = today(); save();
       const right = results.filter(r => r && r.firstTry).length;
       stage.replaceChildren(el('div', { class: 'result' }, el('div', { class: 'kicker', text: 'Daily mixed review' }), el('div', { class: 'big', text: right + ' / ' + items.length }), el('h2', { text: right === items.length ? 'A flawless mix.' : 'Nice work. Mixing topics is harder, and that’s the point.' }),

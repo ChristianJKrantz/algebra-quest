@@ -87,6 +87,8 @@ Cards that are due pile up in **Review**, with a count beside Review in the menu
 <img src="docs/lock-in.jpg" alt="A section summary with one line revealed for self-testing" width="720">
 
 ### Practice: endless problems, hints that never give it away
+
+Open **Calculator** beside **Get a hint** in topic practice or mixed review. It handles fractions, parentheses, powers, roots and logarithms. Rational results appear as exact fractions when available. Select **Show decimal** for a decimal approximation, then close the calculator to continue with your answer still in place. Chapter challenges keep their existing format.
 Every practice problem is generated fresh, so you can't memorize answers, only methods. Type answers the way you'd write them on paper (see [Typing math](#typing-math)).
 
 - **Specific feedback.** Answers are checked for mathematical equivalence (so `1/2`, `0.5` and `2/4` all count) and for *form*. Wrong answers get a note about the exact slip: *"Right endpoints. Check the brackets: [ ] when the endpoint is included, ( ) when it isn't."* · *"You have the right numbers but in the wrong order. x comes first."* · *"That's the right value, but it isn't simplified yet. Write it in the form a + bi."* · *"Plug your value back into the original equation. Does it really work?"*
