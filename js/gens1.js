@@ -38,9 +38,9 @@ G['linear-eq'] = function () {
       fields: one('x =', AQ.numCheck(fval(x0), { roundedDecimal: true }), '~x = ' + fq(x0) + '~', 'fraction or decimal (round to 3+ places)'),
       hints: [`Expand each parenthesis. On the right, multiply both terms inside by −${d}. What sign does the constant have?`,
         'Combine like terms on each side separately before you move anything across the equals sign.',
-        `Add ${d}x to both sides. Once you have the x terms together, which coefficient will you divide by?`],
+        `Add ${d === 1 ? 'x' : d + 'x'} to both sides. Once you have the x terms together, which coefficient will you divide by?`],
       solution: [`Distribute: ~${poly([a, a * b + c])} = ${e - d * f} - ${d}x~`,
-        `Add ~${d}x~ to both sides and subtract ~${a * b + c}~: ~${s}x = ${k}~`,
+        (a * b + c === 0 ? `Add ~${d}x~ to both sides: ~${s}x = ${k}~` : `Add ~${d}x~ to both sides and ${a * b + c < 0 ? 'add' : 'subtract'} ~${Math.abs(a * b + c)}~: ~${s}x = ${k}~`), // never "subtract −11"
         `Divide by ${s}: ~x = ${fq(x0)}~`]
     };
   }

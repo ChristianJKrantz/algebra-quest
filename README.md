@@ -67,6 +67,11 @@ The **10 interactive labs** let you build intuition by playing:
 
 **Your turn.** Right after the worked examples, before the section summary, every lesson hands you one fresh problem of the same kind, with the same hints and feedback as practice. You try the method while it's new instead of just reading it, and **Try another one** gives you more.
 
+<p align="center">
+  <img src="docs/your-turn.jpg" alt="A Your turn problem at the end of the linear equations lesson, before the summary" width="560">
+  <img src="docs/phone-your-turn.jpg" alt="Phone: the Your turn problem" width="200">
+</p>
+
 ### Remember: flashcards, Recall mode and section summaries
 **Flashcards.** Each quest has its own deck (134 cards in all) of the facts and methods you need to know cold: formulas, rules, "what's the first step when…". Say your answer before you flip, then rate yourself honestly:
 
@@ -99,7 +104,7 @@ Every practice problem is generated fresh, so you can't memorize answers, only m
 - **Stars.** A quest earns ⭐ at 3, 8 and 15 problems solved on the first try without hints. The top of the practice page shows how close you are to the next star, and once the first one is earned it links to the next section.
 
 <p>
-  <img src="docs/practice.jpg" alt="An algebra practice problem with feedback on an incorrect entry" width="420">
+  <img src="docs/practice.jpg" alt="An algebra practice problem with the star goal above it and feedback on an unreadable entry" width="420">
   <img src="docs/worked-answer.jpg" alt="The worked answer revealed step by step" width="420">
 </p>
 

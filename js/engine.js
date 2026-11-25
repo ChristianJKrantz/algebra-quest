@@ -509,8 +509,19 @@ function logCount(s) { return (normalize(s).match(/log|ln/g) || []).length; }
 
 /* ---------------- math text renderer ---------------- */
 const escHtml = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+/* tidy generated math before it's shown: "x^2 + 0x + -64" → "x^2 − 64", "1x" → "x", "y = x + 0" → "y = x".
+   Only clean-ups a textbook would make; substituted numbers like "3 - 0" or "{1 + 0|2}" are left as worked. */
+function tidy(t) {
+  return String(t)
+    .replace(/(\s)[+-] 0[a-z](\^\d+|\^\([^()]*\))?(?![\w.(])/g, '')                 // a 0x term
+    .replace(/([a-z\]]|\)(?:\^\d+)?) [+-] 0(?![\d.\w(])(?=\s*(?:$|[|),]))/g, '$1')   // "x + 0" at the end of an expression
+    .replace(/\+ ?-(?=[\d.A-Za-z(√{])/g, '- ')                                       // "+ -3" → "- 3"
+    .replace(/(^|[\s(=])- ?-(?=\d)/g, '$1+ ')                                         // "- -3" → "+ 3"
+    .replace(/(^|[^\d.^\w])1(?=[xyi](?![a-z]))/g, '$1')                               // "1x" → "x", "-1x" → "-x"
+    .replace(/(=\s*-?)1(?=\|)/g, '$1');                                              // "y = 1|x|" → "y = |x|"
+}
 function pretty(src) {
-  let s = escHtml(src);
+  let s = escHtml(tidy(src));
   let prev;
   do { prev = s; s = s.replace(/\{([^{}|]*)\|([^{}]*)\}/g, '<span class="fr"><span class="n">$1</span><span class="d">$2</span></span>'); } while (s !== prev);
   s = s.replace(/_\(([^()]*)\)/g, '<sub>$1</sub>').replace(/_([A-Za-z0-9.]+)/g, '<sub>$1</sub>');
@@ -533,7 +544,7 @@ Object.assign(AQ, {
   normalize, compile, evalStr, evalReal, tryEval, calculate,
   eqCheck, simpRad, radStr, money, OK, NO, READ_FAIL, numCheck, setCheck, ptCheck, exprCheck, complexCheck, complexSetCheck,
   parseIntervals, ivCheck, ivStr, noneAllowedIv, choiceCheck, multiCheck, logFormCheck, expFormCheck, logAtomic, logCount,
-  escHtml, pretty, H
+  escHtml, tidy, pretty, H
 });
 if (typeof module !== 'undefined' && module.exports) module.exports = AQ;
 })(typeof window !== 'undefined' ? window : globalThis);
