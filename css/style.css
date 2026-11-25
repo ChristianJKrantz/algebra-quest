@@ -548,3 +548,11 @@ table.synth tr.rule td.kcell{border-top:0}
     border-radius: 1rem 1rem 0 0;
   }
 }
+
+/* your turn (inside a lesson) and the practice goal */
+.tryit{clear:both;margin:34px 0 10px;border-top:2px solid var(--c);padding-top:12px}
+.tryit h3{font:600 11.5px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--c);margin:0 0 4px}
+.tryit > .note{margin:0 0 12px}
+.pgoal{flex-basis:100%;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font:500 14px var(--ui);padding:2px 0 6px}
+.pgoal.done{color:var(--good,inherit)}
+.pgbar{flex:1;min-width:80px;max-width:220px;height:7px;border-radius:4px;background:var(--line);overflow:hidden}.pgbar i{display:block;height:100%;background:var(--c,var(--gold))}

@@ -402,7 +402,11 @@ function makeProblem(ids) {
 function runPractice(host, topic) {
   const sess = { solved: 0, first: 0, streak: 0 }, bar = el('div', { class: 'session' }), stage = el('div');
   host.append(bar, stage); let last = '';
-  const upd = () => bar.replaceChildren(el('span', { class: 'pill', html: 'Solved <b>' + sess.solved + '</b>' }), el('span', { class: 'pill', html: 'First try <b>' + sess.first + '</b>' }), el('span', { class: 'pill', html: 'Streak <b>' + sess.streak + '</b>' }), el('span', { class: 'pill', html: 'Stars ' + starHTML(starsOf(topic.id)) + ' <span class="note">(' + STAR_AT.join(' / ') + ' first-try)</span>' }));
+  const nextStep = () => { const i = SEC_ORDER.indexOf(topic.id), nx = SEC_ORDER[i + 1]; return nx && topicIndex[nx].ch === topic.ch ? el('a', { class: 'btn hot small', href: '#/ch/' + topic.ch + '/' + nx, text: 'Next: ' + SEC_NO[nx] + ' ' + topicIndex[nx].title + ' →' }) : el('a', { class: 'btn hot small', href: '#/ch/' + topic.ch + '/boss', text: 'Next: chapter review →' }); };
+  const goal = () => { const s = starsOf(topic.id), f = tStat(topic.id).first, need = STAR_AT[s];
+    return s >= 1 ? el('div', { class: 'pgoal done' }, el('span', { text: s >= 3 ? 'Section mastered. Keep it fresh with mixed review.' : '★ earned. Keep going for the next star, or move on.' }), nextStep())
+      : el('div', { class: 'pgoal' }, el('span', { html: 'Goal: <b>' + need + '</b> right on the first try, no hints, for your first ★' }), el('span', { class: 'pgbar', 'aria-hidden': 'true' }, el('i', { style: 'width:' + Math.round(100 * Math.min(f, need) / need) + '%' })), el('span', { class: 'note', text: Math.min(f, need) + ' / ' + need })); };
+  const upd = () => bar.replaceChildren(goal(), el('span', { class: 'pill', html: 'Solved <b>' + sess.solved + '</b>' }), el('span', { class: 'pill', html: 'First try <b>' + sess.first + '</b>' }), el('span', { class: 'pill', html: 'Streak <b>' + sess.streak + '</b>' }), el('span', { class: 'pill', html: 'Stars ' + starHTML(starsOf(topic.id)) + ' <span class="note">(' + STAR_AT.join(' / ') + ' first-try)</span>' }));
   const nextProblem = () => {
     let p; for (let i = 0; i < 6; i++) { p = makeProblem(topic.practice); if (p.prompt !== last) break; } last = p.prompt;
     renderProblem(stage, p, {
@@ -666,6 +670,17 @@ function pageTopic(n, id, tab) {
     les.append(el('div', { class: 'ltools' }, el('label', { class: 'switch' }, sw, 'Recall mode'), el('span', { text: 'Covers the key rules so you can say them from memory first. Use it on your second read.' })));
     const ctx = { sec, rule: 0, ex: 0, fig: 0 };
     t.learn.forEach(b => les.append(renderBlock(b, ctx)));
+    // your turn: right after the examples, try one fresh problem of the same kind (active recall while it's new)
+    if (t.practice && t.practice.length) {
+      const tryHost = el('div'), tries = { n: 0 };
+      const tryOne = () => {
+        let p; try { p = makeProblem(t.practice); } catch (e) { return; }
+        renderProblem(tryHost, p, { topicId: id, calculator: true, autofocus: false, label: tries.n ? 'Another one' : 'A fresh problem', right: 'Like the examples above',
+          nextLabel: 'Try another one', onSolved: r => { tries.n++; recordProblem(id, r); }, onNext: () => { tryOne(); tryHost.scrollIntoView({ block: 'nearest' }); } });
+      };
+      les.append(el('section', { class: 'tryit', 'aria-label': 'Your turn' }, el('h3', { text: 'Your turn' }), el('p', { class: 'note', text: 'Before the summary, try one yourself while the examples are fresh. Use a hint if you get stuck; the worked answer is there too.' }), tryHost));
+      tryOne();
+    }
     const lock = el('div', { class: 'lockin' }), ul = el('ul', null, ...t.cheat.map(c => el('li', { text: c })));
     ul.addEventListener('click', e => { const li = e.target.closest('li'); if (li && lock.classList.contains('covered')) li.classList.add('shown'); });
     const cov = el('button', { class: 'btn small', type: 'button', text: 'Cover these and test myself' });

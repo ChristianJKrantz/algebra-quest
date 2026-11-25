@@ -65,6 +65,8 @@ The **10 interactive labs** let you build intuition by playing:
 | **Exp & log lab:** why bˣ and log_b(x) are mirror images | Logarithms ↔ exponents |
 | **Growth lab:** how much does compounding monthly vs. continuously really matter? | Compound interest |
 
+**Your turn.** Right after the worked examples, before the section summary, every lesson hands you one fresh problem of the same kind, with the same hints and feedback as practice. You try the method while it's new instead of just reading it, and **Try another one** gives you more.
+
 ### Remember: flashcards, Recall mode and section summaries
 **Flashcards.** Each quest has its own deck (134 cards in all) of the facts and methods you need to know cold: formulas, rules, "what's the first step when…". Say your answer before you flip, then rate yourself honestly:
 
@@ -94,7 +96,7 @@ Every practice problem is generated fresh, so you can't memorize answers, only m
 - **Specific feedback.** Answers are checked for mathematical equivalence (so `1/2`, `0.5` and `2/4` all count) and for *form*. Wrong answers get a note about the exact slip: *"Right endpoints. Check the brackets: [ ] when the endpoint is included, ( ) when it isn't."* · *"You have the right numbers but in the wrong order. x comes first."* · *"That's the right value, but it isn't simplified yet. Write it in the form a + bi."* · *"Plug your value back into the original equation. Does it really work?"*
 - **A hint ladder.** Each problem has two or three hints, revealed one at a time. Each one points to the next move in the method, and **no hint ever contains the answer**. The test suite checks this for every generated problem.
 - **Worked answer on request.** If you're stuck, *Show the worked answer* gives the full step-by-step solution. That problem won't count toward your stars, so study the steps and try the next one cold.
-- **Stars.** A quest earns ⭐ at 3, 8 and 15 problems solved on the first try without hints.
+- **Stars.** A quest earns ⭐ at 3, 8 and 15 problems solved on the first try without hints. The top of the practice page shows how close you are to the next star, and once the first one is earned it links to the next section.
 
 <p>
   <img src="docs/practice.jpg" alt="An algebra practice problem with feedback on an incorrect entry" width="420">
@@ -215,6 +217,7 @@ The `tests/` folder checks the math, the content, the interface, security and of
 
 - **`test_generators.js`** (Node) runs every one of the 55 problem generators hundreds of times. For each problem it checks that the site's own answer passes its checker, that junk and near-miss input is rejected, that every multiple-choice question has exactly one right option, and that **no hint contains the answer**.
 - **`test_no_test_problems.js`** (Node) proves that no generated problem, worked example, lesson or flashcard reuses a practice-test problem. It compares each one against SHA-256 fingerprints of the test problems' numbers and variables. It found six near-copies during development, and those generators were fixed.
+- **`test_learning.py`** (Playwright) checks that all 27 lessons end their examples with a Your turn problem before the summary, that it counts as practice, and that practice shows the star goal and then the next section.
 - **`test_ui.py`** (Playwright) opens every lesson, lab, flashcard deck and practice set on a desktop and a phone screen. It answers and rates through them, runs Recall mode, mixed review and a chapter challenge, switches themes, and checks for console errors, horizontal overflow, unrendered math and saved progress.
 - **`test_security.py`** (Playwright) types injection payloads into every answer box in all 27 quests and into the lab inputs, sends malicious links, and loads tampered, corrupt and prototype-polluting saved data. It also blocks browser storage, checks the Content Security Policy and that nothing loads from other sites, and frames the page from another origin.
 - **`test_offline.py`** (Playwright) loads the site once, cuts the network, then reads a lesson, uses a graph lab, rates flashcards and solves a practice problem offline (fonts included). It checks that a new version is picked up when back online and that the app manifest and icons are valid.
@@ -223,6 +226,7 @@ The `tests/` folder checks the math, the content, the interface, security and of
 pip install playwright && playwright install chromium
 N=300 node tests/test_generators.js        # N = problems per generator
 N=5000 node tests/test_no_test_problems.js
+python3 tests/test_learning.py
 python3 tests/test_ui.py
 python3 tests/test_security.py
 python3 tests/test_offline.py
