@@ -556,3 +556,10 @@ table.synth tr.rule td.kcell{border-top:0}
 .pgoal{flex-basis:100%;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font:500 14px var(--ui);padding:2px 0 6px}
 .pgoal.done{color:var(--good,inherit)}
 .pgbar{flex:1;min-width:80px;max-width:220px;height:7px;border-radius:4px;background:var(--line);overflow:hidden}.pgbar i{display:block;height:100%;background:var(--c,var(--gold))}
+
+/* bigger touch targets on phones */
+@media (max-width: 700px) {
+  .keytoggle { min-height: 36px; padding-block: 8px; }
+  .mobile-due { min-height: 32px; display: inline-flex; align-items: center; }
+  .tocrow { min-height: 40px; align-items: center; }
+}
