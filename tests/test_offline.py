@@ -37,7 +37,7 @@ with sync_playwright() as pw:
     p2 = ctx.new_page(); p2.goto(URL + 'index.html#/ch/4'); p2.wait_for_selector('.tgrid', timeout=8000)
     ok(True, 'a brand-new tab opens the site offline')
     ctx.set_offline(False)
-    idx = os.path.join(SITE, 'index.html'); s = open(idx).read(); open(idx, 'w').write(s.replace('Algebra Quest is a free study tool.', 'NEW-VERSION-MARKER'))
+    idx = os.path.join(SITE, 'index.html'); s = open(idx).read(); open(idx, 'w').write(s.replace('Algebra Workbook is a free study tool.', 'NEW-VERSION-MARKER'))
     pg.goto(URL); pg.reload(); pg.wait_for_selector('.plan')
     ok('NEW-VERSION-MARKER' in pg.locator('footer').inner_text(), 'back online, the newest version is loaded (network first)')
     ok(not errs, f'no errors {errs[:2]}')

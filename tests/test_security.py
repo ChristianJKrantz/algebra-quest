@@ -53,7 +53,7 @@ with sync_playwright() as pw:
             pg.click('text=Check answer'); pg.wait_for_timeout(20)
         msgs = ' '.join(pg.locator('.fmsg').all_inner_texts())
         if pwned() or '7*7' in msgs and '49' in msgs: break
-    ok(not pwned(), f'{typed} injection attempts in the answer boxes of all 27 quests run nothing')
+    ok(not pwned(), f'{typed} injection attempts in the answer boxes of all 27 sections run nothing')
     pg.goto(f'{URL}#/ch/1/c1-ineq'); pg.wait_for_selector('.widget .wtext')
     for p in PAYLOADS: pg.fill('.widget .wtext', p); pg.wait_for_timeout(20)
     ok(not pwned(), 'injection attempts in the interval lab’s text box run nothing')
@@ -92,7 +92,7 @@ with sync_playwright() as pw:
     print('Framing')
     p3 = ctx.new_page(); p3.goto(URL + 'evil.html'); p3.wait_for_timeout(800)
     fr = p3.frame_locator('#f')
-    ok(fr.locator('a', has_text='Open Algebra Quest').count() == 1 and fr.locator('.plan').count() == 0, 'inside another site’s frame it shows only a link to the real page')
+    ok(fr.locator('a', has_text='Open Algebra Workbook').count() == 1 and fr.locator('.plan').count() == 0, 'inside another site’s frame it shows only a link to the real page')
     b.close()
 print(f'\n{len(fails)} failed' if fails else '\nAll security checks passed')
 sys.exit(1 if fails else 0)

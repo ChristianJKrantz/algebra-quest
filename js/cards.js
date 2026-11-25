@@ -1,4 +1,4 @@
-/* Algebra Quest flashcards: one deck per quest. Front = a question to answer from memory, back = the fact.
+/* Algebra Workbook flashcards: one deck per section. Front = a question to answer from memory, back = the fact.
    Text uses the same ~math~ markup as the lessons. Cards teach rules and methods only, never test answers. */
 (function (root) {
 'use strict';

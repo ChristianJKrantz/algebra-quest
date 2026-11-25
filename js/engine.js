@@ -1,4 +1,4 @@
-/* Algebra Quest engine: random helpers, fractions, a small expression parser (real + complex),
+/* Algebra Workbook engine: random helpers, fractions, a small expression parser (real + complex),
    answer checkers, and the text-to-HTML math renderer. No eval anywhere. */
 (function (root) {
 'use strict';

@@ -1,4 +1,4 @@
-/* Algebra Quest: tiny SVG grapher. Returns an SVG string; colours come from CSS classes. */
+/* Algebra Workbook: tiny SVG grapher. Returns an SVG string; colours come from CSS classes. */
 (function (root) {
 'use strict';
 const AQ = root.AQ = root.AQ || {};

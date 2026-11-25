@@ -1,10 +1,10 @@
-/* Algebra Quest app: router, notebook sidebar, lessons, flashcards with spaced review, practice, mixed review,
+/* Algebra Workbook app: router, notebook sidebar, lessons, flashcards with spaced review, practice, mixed review,
    chapter challenges and progress. Everything is saved only in this browser. */
 (function () {
 'use strict';
 if (window.top !== window.self) {            // refuse to run inside another site's frame
   document.body.textContent = '';
-  const a = document.createElement('a'); a.href = location.href; a.target = '_top'; a.textContent = 'Open Algebra Quest';
+  const a = document.createElement('a'); a.href = location.href; a.target = '_top'; a.textContent = 'Open Algebra Workbook';
   document.body.append(a); return;
 }
 const AQ = window.AQ, { H, chapters, topicIndex, gens, widgets, pick, shuffle } = AQ;
@@ -33,7 +33,7 @@ chapters.forEach(c => c.topics.forEach(t => (DECK[t.id] || []).forEach((fb, i) =
 const cardsOf = tid => ALL_CARDS.filter(c => c.tid === tid);
 
 /* ---------- saved progress (validated; storage may be blocked) ---------- */
-const KEY = 'algebra-quest-v1';
+const KEY = 'algebra-quest-v1'; // the app's old name; kept so saved progress carries over
 const clampInt = (v, lo, hi) => { v = Math.floor(Number(v)); return Number.isFinite(v) ? Math.max(lo, Math.min(hi, v)) : lo; };
 function fresh() { return { xp: 0, best: 0, topics: {}, boss: {}, cards: {}, days: [], theme: '', recall: false, last: '', mixDay: '' }; }
 function sanitize(o) {
@@ -104,8 +104,8 @@ const side = document.getElementById('side'), topEl = document.getElementById('t
 let current = { page: 'home' };
 let deferredInstall = null;
 function brand() {
-  return el('a', { class: 'brand', href: '#/', 'aria-label': 'Algebra Quest home' }, el('img', { src: 'icon.svg?v=6', alt: '', width: 30, height: 30 }),
-    el('span', { class: 'bt', html: 'Algebra <i>Quest</i>' }));
+  return el('a', { class: 'brand', href: '#/', 'aria-label': 'Algebra Workbook home' }, el('img', { src: 'icon.svg?v=6', alt: '', width: 30, height: 30 }),
+    el('span', { class: 'bt', html: 'Algebra <i>Workbook</i>' }));
 }
 function mdots(tid) {
   const s = el('span', { class: 'mdots', title: 'Lesson read · cards learned · practice star' });
@@ -569,8 +569,8 @@ function tocRow(c, t) {
   return el('a', { class: 'tocrow', href: '#/ch/' + c.n + '/' + t.id, style: '--c:' + CH_COLOR[c.n] }, el('span', { class: 'no', text: SEC_NO[t.id] }), el('span', { class: 'tt', text: t.title }), el('span', { class: 'lead' }), st);
 }
 function pageHome() {
-  document.title = 'Algebra Quest · Master college algebra, one quest at a time';
-  folio = { head: ['Algebra Quest', 'College Algebra'], foot: ['A study companion', 'i', '4 chapters · 27 sections'] };
+  document.title = 'Algebra Workbook · College algebra, one section at a time';
+  folio = { head: ['Algebra Workbook', 'College Algebra'], foot: ['A study companion', 'i', '4 chapters · 27 sections'] };
   const tid = suggestTopic(), ns = nextStepFor(tid), started = Object.keys(store.topics).length > 0 || Object.keys(store.cards).length > 0;
   const hero = el('section', { class: 'hero' },
     el('div', null, el('div', { class: 'kicker', text: 'College algebra' }), el('h1', { tabindex: '-1', html: 'The algebra <em>workbook.</em>' }),
@@ -600,8 +600,8 @@ function missedTopicReview() {
     ...topics.map(t => el('a', { class: 'btn', href: '#/ch/' + t.ch + '/' + t.id + '/practice', text: t.title + ' →' })));
 }
 function pageReview() {
-  document.title = 'Review · Algebra Quest';
-  folio = { head: ['Review', 'Spaced repetition'], foot: ['Algebra Quest', 'R', 'Review'] };
+  document.title = 'Review · Algebra Workbook';
+  folio = { head: ['Review', 'Spaced repetition'], foot: ['Algebra Workbook', 'R', 'Review'] };
   const due = dueCards(), canMix = mixTopics().length > 0, learned = ALL_CARDS.filter(c => cs(c.id).b >= 1).length;
   const next = ALL_CARDS.map(c => cs(c.id)).filter(s => s.b >= 1 && s.d > Date.now()).map(s => s.d).sort((a, b) => a - b)[0];
   return el('div', null, el('div', { class: 'kicker', text: 'Spaced review' }), el('h1', { tabindex: '-1', text: 'Review' }),
@@ -616,8 +616,8 @@ function pageReview() {
         canMix ? el('a', { class: 'btn primary', href: '#/review/mix', text: 'Start mixed review →' }) : el('a', { class: 'btn', href: '#/ch/1/c1-linear/practice', text: 'Try a first problem' }))));
 }
 function pageReviewCards() {
-  document.title = 'Flashcard review · Algebra Quest';
-  folio = { head: ['Review', 'Flashcards'], foot: ['Algebra Quest', 'R', 'Flashcard review'] };
+  document.title = 'Flashcard review · Algebra Workbook';
+  folio = { head: ['Review', 'Flashcards'], foot: ['Algebra Workbook', 'R', 'Flashcard review'] };
   const root = el('div', null, el('div', { class: 'kicker', text: 'Review' }), el('h1', { tabindex: '-1', text: 'Flashcard review' }));
   const due = shuffle(dueCards()).slice(0, 30);
   if (!due.length) { root.append(el('div', { class: 'empty' }, el('h3', { text: 'Nothing due right now' }), el('p', { text: 'Your memory is up to date. Learn a new deck from your next section.' }), el('a', { class: 'btn hot', href: nextStepFor(suggestTopic()).href, text: 'Next section →' }))); return root; }
@@ -625,8 +625,8 @@ function pageReviewCards() {
   const host = el('div'); root.append(host); runCards(host, due, { after: [el('a', { class: 'btn hot', href: '#/review/mix', text: 'Now a mixed problem set →' })] }); return root;
 }
 function pageReviewMix() {
-  document.title = 'Mixed review · Algebra Quest';
-  folio = { head: ['Review', 'Mixed problem set'], foot: ['Algebra Quest', 'R', 'Mixed review'] };
+  document.title = 'Mixed review · Algebra Workbook';
+  folio = { head: ['Review', 'Mixed problem set'], foot: ['Algebra Workbook', 'R', 'Mixed review'] };
   const root = el('div', null, el('div', { class: 'kicker', text: 'Review' }), el('h1', { tabindex: '-1', text: 'Mixed review' }));
   if (!mixTopics().length) { root.append(el('div', { class: 'empty' }, el('h3', { text: 'Practice something first' }), el('p', { text: 'Mixed review shuffles topics you’ve already practiced. Solve a problem in any section to unlock it.' }), el('a', { class: 'btn hot', href: '#/ch/1/c1-linear/practice', text: 'Start with Chapter 1 →' }))); return root; }
   root.append(el('p', { class: 'sub', text: 'Eight problems, no labels telling you the method. First decide what kind of problem it is, then solve it.' }));
@@ -634,8 +634,8 @@ function pageReviewMix() {
 }
 function pageChapter(n) {
   const ch = chapters.find(c => c.n === n); if (!ch) return pageHome();
-  document.title = 'Chapter ' + n + ': ' + ch.title + ' · Algebra Quest';
-  folio = { head: ['Chapter ' + n, ch.title], foot: ['Algebra Quest', String(SEC_ORDER.indexOf(ch.topics[0].id) + 1), 'Chapter ' + n], ch: n };
+  document.title = 'Chapter ' + n + ': ' + ch.title + ' · Algebra Workbook';
+  folio = { head: ['Chapter ' + n, ch.title], foot: ['Algebra Workbook', String(SEC_ORDER.indexOf(ch.topics[0].id) + 1), 'Chapter ' + n], ch: n };
   const root = el('div', { style: '--c:' + CH_COLOR[n] });
   root.append(el('div', { class: 'chhead' }, el('div', { class: 'big', text: String(n) }), el('div', null, el('div', { class: 'kicker', text: 'Chapter ' + n }), el('h1', { tabindex: '-1', text: ch.title }), el('p', { class: 'sub', text: ch.blurb }))),
     el('h2', { text: 'In this chapter' }), el('p', { class: 'note', text: 'Each section goes Learn → Flashcards → Practice. Work through them in order the first time.' }),
@@ -650,10 +650,10 @@ function pageChapter(n) {
 function pageTopic(n, id, tab) {
   const t = topicIndex[id], ch = chapters.find(c => c.n === n); if (!t || t.ch !== n) return pageChapter(n);
   tab = tab === 'practice' || tab === 'cards' ? tab : 'learn';
-  document.title = SEC_NO[id] + ' ' + t.title + ' · Algebra Quest';
+  document.title = SEC_NO[id] + ' ' + t.title + ' · Algebra Workbook';
   store.last = id; if (tab === 'learn' && !tStat(id).read) { tMut(id).read = 1; } save();
   const i = ch.topics.indexOf(t), sec = SEC_NO[id], root = el('div', { style: '--c:' + CH_COLOR[n] }), base = '#/ch/' + n + '/' + id;
-  folio = { head: ['Chapter ' + n + ' · ' + ch.title, 'Section ' + sec], foot: ['Algebra Quest', String(SEC_ORDER.indexOf(id) + 1), { learn: 'Lesson', cards: 'Flashcards', practice: 'Practice' }[tab]], ch: n };
+  folio = { head: ['Chapter ' + n + ' · ' + ch.title, 'Section ' + sec], foot: ['Algebra Workbook', String(SEC_ORDER.indexOf(id) + 1), { learn: 'Lesson', cards: 'Flashcards', practice: 'Practice' }[tab]], ch: n };
   const nCards = cardsOf(id).length, learned = learnedCount(id);
   const step = (k, num, label, sub, done) => el('a', { class: 'step' + (tab === k ? ' on' : '') + (done ? ' done' : ''), href: base + (k === 'learn' ? '' : '/' + k), 'aria-current': tab === k ? 'page' : null }, el('span', { class: 'sn', text: done ? '✓' : String(num) }), label, el('span', { class: 'sx', text: sub }));
   root.append(el('div', { class: 'qhead' }, el('h1', { tabindex: '-1' }, el('span', { class: 'secno', text: sec }), t.title), el('p', { class: 'sub', text: t.tag + '.' }),
@@ -694,16 +694,16 @@ function pageTopic(n, id, tab) {
 }
 function pageBoss(n) {
   const ch = chapters.find(c => c.n === n); if (!ch) return pageHome();
-  document.title = 'Chapter ' + n + ' review · Algebra Quest';
-  folio = { head: ['Chapter ' + n + ' · ' + ch.title, 'Chapter review'], foot: ['Algebra Quest', String(SEC_ORDER.indexOf(ch.topics[ch.topics.length - 1].id) + 1), 'Chapter review'], ch: n };
+  document.title = 'Chapter ' + n + ' review · Algebra Workbook';
+  folio = { head: ['Chapter ' + n + ' · ' + ch.title, 'Chapter review'], foot: ['Algebra Workbook', String(SEC_ORDER.indexOf(ch.topics[ch.topics.length - 1].id) + 1), 'Chapter review'], ch: n };
   const root = el('div', { style: '--c:' + CH_COLOR[n] }), host = el('div');
   root.append(el('div', { class: 'kicker', text: 'Chapter ' + n }), el('h1', { tabindex: '-1', text: 'Chapter review' }), el('p', { class: 'sub', text: 'Ten mixed problems. First-try answers earn 10 points, later answers 5, and revealed answers 0. Treat it like the real test: no notes.' }), host);
   runBoss(host, ch); return root;
 }
 function pageCheat(n) {
   const ch = chapters.find(c => c.n === n); if (!ch) return pageHome();
-  document.title = 'Chapter ' + n + ' cheat sheet · Algebra Quest';
-  folio = { head: ['Chapter ' + n + ' · ' + ch.title, 'Cheat sheet'], foot: ['Algebra Quest', String(SEC_ORDER.indexOf(ch.topics[ch.topics.length - 1].id) + 1), 'Cheat sheet'], ch: n };
+  document.title = 'Chapter ' + n + ' cheat sheet · Algebra Workbook';
+  folio = { head: ['Chapter ' + n + ' · ' + ch.title, 'Cheat sheet'], foot: ['Algebra Workbook', String(SEC_ORDER.indexOf(ch.topics[ch.topics.length - 1].id) + 1), 'Cheat sheet'], ch: n };
   const root = el('div', { class: 'cheat', style: '--c:' + CH_COLOR[n] });
   const quiz = el('button', { class: 'btn', type: 'button', text: 'Quiz me (hide the rules)' });
   quiz.addEventListener('click', () => { const on = !root.classList.contains('quiz'); root.classList.toggle('quiz', on); root.querySelectorAll('li').forEach(li => li.classList.remove('shown')); quiz.textContent = on ? 'Show everything' : 'Quiz me (hide the rules)'; });
@@ -715,8 +715,8 @@ function pageCheat(n) {
   return root;
 }
 function pageProgress() {
-  document.title = 'My progress · Algebra Quest';
-  folio = { head: ['Progress', 'Saved only in this browser'], foot: ['Algebra Quest', 'P', 'Progress'] };
+  document.title = 'My progress · Algebra Workbook';
+  folio = { head: ['Progress', 'Saved only in this browser'], foot: ['Algebra Workbook', 'P', 'Progress'] };
   const earned = Object.keys(topicIndex).reduce((s, id) => s + starsOf(id), 0), solved = Object.values(store.topics).reduce((s, t) => s + t.tried, 0);
   const learned = ALL_CARDS.filter(c => cs(c.id).b >= 2).length, root = el('div');
   root.append(el('div', { class: 'kicker', text: 'Your record' }), el('h1', { tabindex: '-1', text: 'My progress' }), el('p', { class: 'sub', text: 'No accounts and no tracking. Your study history stays on this device.' }),
@@ -753,7 +753,7 @@ function route() {
     else if (parts[2] === 'cheat') { current = { page: 'cheat', ch: n }; page = pageCheat(n); }
     else { current = { page: 'topic', ch: n, tid: topicIndex[parts[2]] ? parts[2] : '' }; page = pageTopic(n, parts[2], parts[3]); }
   } else page = pageHome();
-  if (!folio.head) folio = { head: ['Algebra Quest', 'College Algebra'], foot: ['Algebra Quest', '', ''] };
+  if (!folio.head) folio = { head: ['Algebra Workbook', 'College Algebra'], foot: ['Algebra Workbook', '', ''] };
   const app = document.getElementById('app'); app.replaceChildren(frame(page)); refreshSide(); window.scrollTo(0, 0);
   const h = app.querySelector('h1'); if (h) h.focus({ preventScroll: true });
 }

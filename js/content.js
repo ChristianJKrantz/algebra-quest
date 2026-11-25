@@ -1,4 +1,4 @@
-/* Algebra Quest lessons. Text uses ~math~ segments (see AQ.H). All worked examples use their own numbers,
+/* Algebra Workbook lessons. Text uses ~math~ segments (see AQ.H). All worked examples use their own numbers,
    different from the practice-test problems, and no answer to any practice-test problem appears anywhere. */
 (function (root) {
 'use strict';

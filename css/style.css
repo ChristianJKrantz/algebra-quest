@@ -1,4 +1,4 @@
-/* Algebra Quest: "printed textbook" design system.
+/* Algebra Workbook: "printed textbook" design system.
    Pages are sheets of paper on a desk. Headings: Fraunces. Reading: Source Serif 4. Interface labels: Inter.
    Typed answers: AQ Legible Mono (Atkinson Hyperlegible Mono with an unslashed zero). */
 @font-face{font-family:Fraunces;font-weight:600;font-display:swap;src:url(../fonts/fraunces-latin-600-normal.woff2) format('woff2')}
@@ -246,7 +246,7 @@ table.prog a{color:var(--ink);text-decoration:none}table.prog a:hover{color:var(
 table.prog{min-width:540px}
 .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 
-/* ---------- section (quest) page ---------- */
+/* ---------- section page ---------- */
 .qhead{margin-bottom:26px}
 .steps{display:flex;margin-top:16px;border:1px solid var(--line2);border-radius:6px;overflow:hidden;width:max-content;max-width:100%;background:var(--card)}
 .step{display:flex;align-items:center;gap:8px;padding:8px 16px;border-right:1px solid var(--line2);color:var(--ink2);text-decoration:none;font:600 13.5px var(--ui);white-space:nowrap}

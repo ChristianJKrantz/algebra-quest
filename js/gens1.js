@@ -1,4 +1,4 @@
-/* Algebra Quest practice generators, chapters 1 and 2.
+/* Algebra Workbook practice generators, chapters 1 and 2.
    Every generator returns {prompt, fields:[{key,label,check,answer,...}], hints:[], solution:[], visual?}.
    Strings use ~math~ segments (see AQ.H). Hints nudge toward the method and never state the answer. */
 (function (root) {

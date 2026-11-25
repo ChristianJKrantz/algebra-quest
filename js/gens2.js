@@ -1,4 +1,4 @@
-/* Algebra Quest practice generators, chapters 3 and 4. */
+/* Algebra Workbook practice generators, chapters 3 and 4. */
 (function (root) {
 'use strict';
 const AQ = root.AQ = root.AQ || {};

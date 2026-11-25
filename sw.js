@@ -1,7 +1,8 @@
-/* Algebra Quest service worker: keeps a copy of the site on the device so it works offline.
+/* Algebra Workbook service worker: keeps a copy of the site on the device so it works offline.
    Pages are network-first and skip the browser's HTTP cache, so updates show up right away; fonts and icons
    (versioned URLs) are cache-first. Only this site's own files are handled. */
-const CACHE_PREFIX = 'algebra-quest-v';
+const CACHE_PREFIX = 'algebra-workbook-v';
+const OLD_PREFIX = 'algebra-quest-v'; // caches from before the rename
 const CACHE = CACHE_PREFIX + '17';
 const FONTS = ['fraunces-latin-600-normal', 'fraunces-latin-600-italic', 'fraunces-latin-800-normal',
   'source-serif-4-latin-400-normal', 'source-serif-4-latin-400-italic', 'source-serif-4-latin-600-normal', 'source-serif-4-latin-700-normal',
@@ -11,7 +12,7 @@ const CORE = ['./', 'index.html', 'css/style.css', 'js/engine.js', 'js/graph.js'
   'manifest.webmanifest?v=6', 'icon.svg?v=6', 'icon-192.png?v=6', 'icon-512.png?v=6', 'icon-maskable-512.png?v=6', 'apple-touch-icon.png?v=6', ...FONTS];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k.startsWith(CACHE_PREFIX) && k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => (k.startsWith(CACHE_PREFIX) && k !== CACHE) || k.startsWith(OLD_PREFIX)).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
 self.addEventListener('fetch', e => {
   const req = e.request;

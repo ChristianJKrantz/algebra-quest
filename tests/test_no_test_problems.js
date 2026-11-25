@@ -1,6 +1,6 @@
 /* Node test: no generated problem, lesson example or flashcard reuses a practice-test problem.
    practice_test_fingerprints.json holds only SHA-256 hashes of each test problem's numbers and variables (tagged
-   with the quest it belongs to), so the test problems themselves are not stored in this repo.
+   with the section it belongs to), so the test problems themselves are not stored in this repo.
    Run: N=2000 node tests/test_no_test_problems.js */
 const crypto = require('crypto'), { candidates } = require('./fingerprint.js');
 const AQ = require('../js/engine.js'); require('../js/graph.js'); require('../js/gens1.js'); require('../js/gens2.js'); require('../js/content.js'); require('../js/cards.js');

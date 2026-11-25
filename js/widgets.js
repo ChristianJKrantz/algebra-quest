@@ -1,4 +1,4 @@
-/* Algebra Quest interactive labs. Each widget draws into a container with the SVG grapher. */
+/* Algebra Workbook interactive labs. Each widget draws into a container with the SVG grapher. */
 (function (root) {
 'use strict';
 const AQ = root.AQ = root.AQ || {};
